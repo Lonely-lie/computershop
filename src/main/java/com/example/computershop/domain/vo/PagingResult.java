@@ -3,18 +3,12 @@ package com.example.computershop.domain.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Result类说明信息
- *
- * @author HeWenhai
- * Created On: 2020-2-23 17:12
- * @since 1.0.0
- */
+
 public class PagingResult<T> {
 
-  private int totalCount;
-  private int offset;
-  private int size;
+  private int totalCount; //总数
+  private int offset;     //第几页
+  private int size;       //数量
   private List<T> items = new ArrayList<>();
 
   public int getTotalCount() {

@@ -11,8 +11,32 @@
   </resultMap>
 
   <select id="list" resultMap="ProductTypeResult">
-    SELECT * FROM pro_type_info LIMIT #{offset},#{size}
+    SELECT * FROM pro_type_info  WHERE is_delete=0 LIMIT #{offset},#{size}
   </select>
+
+  <select id="listCount" resultType="int">
+    SELECT COUNT(*)   FROM pro_type_info WHERE is_delete=0
+  </select>
+
+  <insert id="insert" parameterType="productType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pro_type_info(name,is_delete,create_time,update_time)
+        VALUES(#{name},#{isDelete},#{createTime},#{updateTime})
+    </insert>
+
+  <update id="update" parameterType="productType">
+        update pro_type_info
+        set
+        name=#{name},is_delete=#{isDelete},update_time=#{updateTime}
+        where id=#{id}
+    </update>
+
+    <update id="deleteUpdate" parameterType="productType">
+        update pro_type_info
+        set
+        is_delete=true
+        where id=#{id}
+    </update>
+
 
 </mapper>
 

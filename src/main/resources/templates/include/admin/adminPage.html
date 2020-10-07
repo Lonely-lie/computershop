@@ -1,25 +1,41 @@
-<div class="pageDiv" th:fragment="html">
-	<nav>
-	  <ul class="pagination">
-	    <li :class="{ disabled: pagination.first }">
-	      <a  href="#nowhere" @click="jump('first')">«</a>
-	    </li>
-	    <li :class="{ disabled: !pagination.hasPrevious }">
-	      <a  href="#nowhere" @click="jump('pre')">‹</a>
-	    </li>		    
-
-		<li  v-for="i in pagination.navigatepageNums">
-			<a href="#nowhere" @click="jumpByNumber(i-1)" >
-				{{i}}
-			</a>
-		</li>
-
-	    <li :class="{ disabled: !pagination.hasNext }">
-	      <a  href="#nowhere" @click="jump('next')">›</a>
-	    </li>
-	    <li :class="{ disabled: pagination.last }">
-	      <a  href="#nowhere" @click="jump('last')">»</a>
-	    </li>		    
-	  </ul>
-	</nav>    
+<div class="card-footer" th:fragment="html">
+	<div class="row justify-content-between">
+		<div class="col-lg-2 col-sm-6">
+			<div class="form-group form-inline">
+				显示&nbsp;
+				<select class="custom-select" v-model="clientSize"  >
+					<option :value="5">
+						5
+					</option>
+					<option :value="10">
+						10
+					</option>
+					<option :value="20">
+						20
+					</option>
+					<option :value="50">
+						50
+					</option>
+					<option :value="100">
+						100
+					</option>
+				</select>
+				&nbsp;项/页
+			</div>
+		</div> <!--左边的数量选择-->
+		<div class="col-auto">
+			<nav aria-label="Page navigation">
+				<ul class="pagination">
+					<li class="page-item" v-for="link in pageLinks"
+						v-bind:class="link==(offset/clientSize)+1 ? 'active' : ''">
+						<a v-if="link!='...'" class="page-link"
+						   v-on:click="offset = clientSize*(link-1)">
+							{{ link }}</a>
+						<a v-else="" class="page-link">
+							{{ link }} </a>
+					</li>
+				</ul>
+			</nav>
+		</div> <!--右边的页码-->
+	</div>
 </div>
