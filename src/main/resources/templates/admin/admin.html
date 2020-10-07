@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHead::html('管理员后台管理')" >头部内容</head>  <!--包含不替换head标签-->
+
+
+
+<body class="c-app">
+    <div class="c-wrapper c-fixed-components">
+
+        <header th:replace="include/admin/adminNavigator::html">导航栏</header>
+
+        <div class="c-body">
+            <main class="c-main">
+                <div class="container-fluid">
+                    <div class="fade-in">
+                        <div class="card">
+                            <div class="card-header">
+                                <ol class="breadcrumb border-0 m-0">
+                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                                    <li class="breadcrumb-item active">Dashboard</li>
+                                    <!-- Breadcrumb Menu-->
+                                </ol>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-responsive-sm table-bordered table-striped table-sm text-center">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10px">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox"
+                                                       data-action="do-check-all" name="checkAll" id="checkAll">
+                                                <label class="form-check-label" for="checkAll"></label>
+                                            </div>
+                                        </th>
+                                        <th>编号</th>
+                                        <th>用户名</th>
+                                        <th>密码</th>
+                                        <th>状态</th>
+                                        <th>描述</th>
+                                        <th>创建时间</th>
+                                        <th>修改时间</th>
+                                        <th>角色</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="item in pageItems" v-if="item !== null" >
+                                        <td>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox"
+                                                       v-model="item.selected" v-bind:name="'item-' + item.index">
+                                                <label class="form-check-label"
+                                                       v-bind:for="'item-' + item.index"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-check form-check-inline">
+                                                {{ item.index }}
+                                                <label class="form-check-label"
+                                                       v-bind:for="'item-' + item.index"></label>
+                                            </div>
+                                        </td>
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.passWord}}</td>
+                                        <td>
+                                            <!-- FIXIT 无效转有效有问题 -->
+                                            <span v-if="!item.deleted" class="badge badge-danger">无效</span>
+                                            <span v-else class="badge badge-success ">有效</span></td>
+                                        <td>{{item.description}}</td>
+                                        <td>{{ item.createTime}}</td>
+                                        <td>{{ item.updateTime}}</td>
+                                        <td>
+                                            <a class="btn btn-ghost-info" @click="lookRole(item.id)">
+                                                <i class="c-icon cil-user"  ></i>&nbsp;查看角色
+                                            </a>
+                                        <td>
+                                            <a class="btn btn-outline-success btn-sm" v-on:click="details(item)">
+                                                <i class="c-icon cil-description"></i>
+                                            </a>&nbsp;
+                                            <a class="btn btn-outline-info btn-sm" v-on:click="edit(item)">
+                                                <i class="c-icon cil-pencil"></i>
+                                            </a>&nbsp;
+                                            <a class="btn btn-outline-danger btn-sm" v-on:click="remove(item)">
+                                                <i class="c-icon cil-x"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="c-footer">
+                <div><a href="https://coreui.io">CoreUI</a> © 2020 creativeLabs.</div>
+                <div class="ml-auto">Powered by&nbsp;<a href="https://coreui.io/">CoreUI</a></div>
+            </footer>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+<!--<footer th:include="include/admin/adminFooter::html" >页脚内容</footer>  &lt;!&ndash;replace：替换，使用adminFooter的标签  &ndash;&gt;-->
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+

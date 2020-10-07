@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.computershop.mapper.ProductTypeMapper">
+
+  <resultMap type="productType" id="ProductTypeResult">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="deleted" column="is_deleted"/>
+    <result property="createTime" column="create_time"/>
+    <result property="updateTime" column="update_time"/>
+  </resultMap>
+
+  <select id="list" resultMap="ProductTypeResult">
+    SELECT * FROM pro_type_info LIMIT #{offset},#{size}
+  </select>
+
+</mapper>
+
