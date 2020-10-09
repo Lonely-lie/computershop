@@ -16,6 +16,6 @@ public class AdminController {
   }
   @RequestMapping("/admin")
   public String admin() {
-    return "admin/admin";
+    return "admin/admin_category_list";
   }
 }

@@ -320,6 +320,34 @@
                 return links;
             }
         },
+        watch: {
+            offset: function (newValue, oldValue) {
+                if (newValue >= app.items.length || app.items[app.offset] == null) {    //新数据是否大于原数据长度，是否为空
+                    var serviceUrl = 'api/productType?offset=' + app.offset + '&size=' + app.serverSize;
+                    axios.get(serviceUrl)
+                        .then(function (response) {
+                            //把取回来的数据填充到app.items数组中去
+                            var i = 0;
+                            var newItems = response.data.items;
+                            //判断是否需要填充空元素
+                            if (newValue > app.items.length) {
+                                for (i = app.items.length; i < app.offset; i++) {
+                                    app.items.push(null);
+                                }
+                            }
+                            for (i = 0; i < newItems.length; i++) {
+                                app.items.splice(app.offset + i, 1, newItems[i]);
+                            }
+                            app.sortIndex();
+                            return;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            }
+        }
+
     });
 
     axios.get('api/productType')
