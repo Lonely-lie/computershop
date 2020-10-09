@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHead::html('管理员后台管理')" >头部内容</head>  <!--包含不替换head标签-->
+
+
+
+<body class="c-app">
+<div class="c-wrapper c-fixed-components">
+
+    <header th:replace="include/admin/adminNavigator::html">导航栏</header>
+
+    <div class="c-body">
+        <main class="c-main">
+            <div class="container-fluid">
+                <div class="fade-in">
+                    <div class="card" id="items-manager">
+                        <div class="card-header">
+                            <ol class="breadcrumb border-0 m-0">
+                                <li class="breadcrumb-item"><a href="admin">分类管理</a></li>
+                                <li class="breadcrumb-item">属性管理</li>
+                                <li class="breadcrumb-item active"></li>
+                                <!-- Breadcrumb Menu-->
+                            </ol>
+                        </div>
+                        <a class="btn btn-ghost-info" @click="edit(null)">
+                            <i class="c-icon cil-playlist-add"  ></i>&nbsp;新增
+                        </a>
+                        <div class="card-body">
+                            <!--表格-->
+                            <table class="table table-responsive-sm table-bordered table-striped table-sm text-center">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>属性名称</th>
+                                    <th>编辑</th>
+                                    <th>删除</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="item in pageItems" v-if="item !== null" >
+                                    <td>{{item.id}}</td>
+                                    <td>
+                                        {{item.name}}
+                                    </td>
+                                    <!--属性管理-->
+                                    <td><!--编辑-->
+                                        <a  class="btn btn-outline-danger btn-sm" v-on:click="edit(item)">
+                                            <i class="c-icon cil-description"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a  class="btn btn-ghost-danger" @click="remove(item)" >
+                                            <i class="c-icon cil-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!--删除模态框-->
+                            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                <div class="modal-dialog modal-danger" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">危险</h4>
+                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>记录删除后将无法恢复！确定要删除吗？</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal"
+                                                    v-on:click="removeItems">
+                                                确定
+                                            </button>
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">
+                                                取消
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content-->
+                                </div>
+                                <!-- /.modal-dialog-->
+                            </div>
+                            <!--编辑模态框-->
+                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-info modal-lg" role="document" id="item-modal"> <!--ok-->
+                                    <div class="modal-content">
+                                        <form class="needs-validation" id="item-form" novalidate>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">添加/修改</h4>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            </div>
+                                            <div class="modal-body"><!--编辑模态框内容-->
+                                                <div class="container-fluid">
+                                                    <div class="form-group row">
+                                                        <label
+                                                                class="col-sm-3 col-form-label">商品类型</label>
+                                                        <div class="col-sm-9">
+                                                            <input v-model="formItem.name" required
+                                                                   pattern="^([-a-zA-Z0-9_\u4e00-\u9fa5]{2,16})$">
+                                                            <small class="form-text text-muted">
+                                                                文本值规则：必须以英文字母或中文字符开头，2~16个字符（中文、字母、数字、_或-）
+                                                            </small>
+                                                            <div class="invalid-feedback">
+                                                                文本值不符合规则
+                                                            </div>
+                                                        </div>
+                                                    </div><!--用户名-->
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-info" @click="saveItem()">
+                                                            保存
+                                                        </button>
+                                                        <button type="button" data-dismiss="modal"
+                                                                class="btn btn-secondary">
+                                                            取消
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                        </form>   <!--novalidate表示让浏览器本身不校验表单-->
+                                    </div>
+                                    <!-- /.modal-content-->
+                                </div>
+                            </div>
+                        </div>
+                        <div th:replace="include/admin/adminPage::html">页码</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
+        <div th:replace="include/admin/adminFooter::html">页脚</div>
+    </div>
+</div>
+
+
+<script>
+    function  getUrlParam (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+    var cid = getUrlParam("id");
+    var items = [ ];
+    var item = {
+        index: -1,
+        id: -1,
+        pro_type_id:cid,
+        name:"材质",
+        isDelete: false,
+        createTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        updateTime: moment().format("YYYY-MM-DD HH:mm:ss")//moment().format("YYYY-MM-DD HH:mm:ss")
+    }; //空表，用于新增功能 在createItem()
+    var app = new Vue({
+        el: '#items-manager',
+        data: {
+            offset: 0,  //第几条数据
+            clientSize: 5, //显示数量
+            serverSize: 10,    //服务器取数量
+            totalCount: 0,     //总数据数量
+            items:items,
+            formItem: {},  //编辑功能，空表单，或编辑表单
+            item: item,  //空表，用于新增功能 在createItem()
+
+        },
+        methods: {
+            //对items数据进行添加索引
+            sortIndex: function regenerateIndex() {
+                _.forEach(this.items, function (item, index) {
+                    if (item) {
+                        item.index = index;
+                        item.selected = false;
+                    }
+                });
+            },
+            //删除功能，调出删除模态框
+            remove: function (item) {
+                this.deleteItems = item;
+                $('#deleteModal').modal('show');
+            },
+            //确认删除
+            removeItems:function () {
+                axios.put(url+"/delete", this.deleteItems)
+                    .then(function (response) {
+                        if (response.status===201){
+                            app.items.splice(app.deleteItems.index,1);
+                            app.totalCount=app.totalCount-1;
+                            app.sortIndex();
+                            toastr.success("删除成功！");
+                        }else {
+                            toastr.error("删除出错！");
+                        }
+                    })
+                    .catch(function (error) {
+                        toastr.error(error,'错误');
+                        console.log(error);
+                    });
+            },
+            //创建新Item对象，格式化时间
+            createItem: function createItem() {
+                item.createTime=moment().format("YYYY-MM-DD HH:mm:ss");
+                return JSON.parse(JSON.stringify(item));
+            },
+            // 编辑/新增功能
+            edit: function (item) {
+                if (item === null) {//新增功能
+                    item = this.createItem();
+                }
+                item.updateTime=moment().format("YYYY-MM-DD HH:mm:ss");
+                this.formItem = JSON.parse(JSON.stringify(item));//老师代码
+                $('.needs-validation').removeClass('was-validated');//给form标签删除【was-validated】元素，告诉浏览器不显示校验结果
+                $('#editModal').modal('show');
+            },  //编辑功能
+            saveItem:function (){
+                var index = _.indexOf(app.items,app.formItem);
+                var validated = this.validateForm();
+                if (validated === false) {//校验不通过，显示错误信息
+                    event.preventDefault();
+                    event.stopPropagation();
+                    toastr.warning("请正确填写！");
+                } else {
+                    if (app.formItem.id === -1) {    //新增
+                        axios.post(url, this.formItem)
+                            .then(function (response) {
+                                if (response.status===201){
+                                    app.items.push(response.data);
+                                    app.totalCount=app.totalCount+1;
+                                    app.sortIndex();
+                                    toastr.success("添加成功！");
+                                    console.log(response);
+                                }else {
+                                    toastr.error("添加失败！");
+                                }
+                            })
+                            .catch(function (error) {
+                                toastr.error(error,"添加失败！");
+                                console.log(error);
+                            });
+                    }else {
+                        //更新
+                        axios.put(url, this.formItem)
+                            .then(function (response) {
+                                if (response.status===201){
+                                    Vue.set(app.items, app.formItem.index, app.formItem);
+                                    toastr.success("修改成功！");
+                                    console.log(response);
+                                }else {
+                                    toastr.error("修改失败！");
+                                }
+                            })
+                            .catch(function (error) {
+                                toastr.error(error,'错误');
+                                console.log(error);
+                            });
+                    }
+                    $('#editModal').modal('hide');
+                }
+
+            },
+            validateForm: function validateForm() {
+                var form = $("#item-form").get(0);
+                var validated = form.checkValidity();
+                //给form标签添加【was-validated】元素，告诉浏览器显示校验结果
+                form.classList.add("was-validated");
+                return validated; //返回表单校验布尔值
+            },
+
+        },
+        computed: {
+            pageItems: function pageItems() {//返回要输出的开头索引，结束索引
+                var startIndex = this.offset;   //从哪里开始
+                var endIndex = startIndex + this.clientSize - 1;  //从哪里结束
+                if (1) {//不搜索 进行显示全数据
+                    return this.items.filter(function (value, index) {
+                        return index >= startIndex && index <= endIndex;
+                    });
+                }
+            },
+            pageLinks: function () {
+                var links = [1];
+                var i = 2;
+                var total = Math.ceil(this.totalCount / this.clientSize); //默认总页数
+
+                total = Math.ceil(this.totalCount / this.clientSize); //没搜索总页数
+
+                if (total <= 6) {//判断是否展开，或者总页数小于6 就全部显示
+                    for (i = 2; i <= total; i++) {
+                        links.push(i);
+                    }
+                } else {
+                    var start = this.offset / this.clientSize - 2;
+                    var end = this.offset / this.clientSize + 3 >= total ? total - 1 : this.offset / this.clientSize + 2;
+                    if (start > 2) {
+                        for (i = start; i <= end; i++) {
+                            links.push(i);
+                        }
+                    } else {
+                        for (i = 2; i <= 6; i++) {
+                            links.push(i);
+                        }
+                    }
+                    if (this.offset / this.clientSize > 4) {
+                        links.splice(1, 0, "...");
+                    }
+                    if (this.offset / this.clientSize + 3 < total) {
+                        links.splice(8, 0, "...");
+                    }
+                    links.push(total);
+                }
+                return links;
+            }
+        },
+        watch: {
+            offset: function (newValue, oldValue) {
+                if (newValue >= app.items.length || app.items[app.offset] == null) {    //新数据是否大于原数据长度，是否为空
+                    var serviceUrl = 'api/admin_property_list/'+cid+'/properties??offset='+ app.offset + '&size=' + app.serverSize;
+                    axios.get(serviceUrl)
+                        .then(function (response) {
+                            //把取回来的数据填充到app.items数组中去
+                            var i = 0;
+                            var newItems = response.data.items;
+                            //判断是否需要填充空元素
+                            if (newValue > app.items.length) {
+                                for (i = app.items.length; i < app.offset; i++) {
+                                    app.items.push(null);
+                                }
+                            }
+                            for (i = 0; i < newItems.length; i++) {
+                                app.items.splice(app.offset + i, 1, newItems[i]);
+                            }
+                            app.sortIndex();
+                            return;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            }
+        }
+
+    });
+
+    var url= "api/admin_property_list/"+cid+"/properties";
+    axios.get(url)
+        .then(function (response) {
+            if (response.status===200){
+                app.items = response.data.items;
+                app.totalCount = response.data.totalCount;
+                app.sortIndex();
+                console.log(response);
+                toastr.success("欢迎！");
+            }else {
+                toastr.error("获取User出错！200");
+            }
+        })
+</script>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+

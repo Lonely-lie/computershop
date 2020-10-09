@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.computershop.mapper.PropertyMapper">
+
+    <resultMap type="property" id="PropertyResult">
+        <id property="id" column="id"/>
+        <result property="pro_type_id" column="pro_type_id"/>
+        <result property="name" column="name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deleted" column="is_deleted"/>
+    </resultMap>
+
+    <select id="list" resultMap="PropertyResult">
+    SELECT * FROM property  WHERE pro_type_id=#{id} and is_delete=0 LIMIT #{offset},#{size}
+  </select>
+
+    <select id="listCount" resultType="int">
+    SELECT COUNT(*)   FROM property WHERE is_delete=0 and pro_type_id=#{id}
+  </select>
+
+    <update id="update" parameterType="property">
+        update property
+        set
+        name=#{name},update_time=#{updateTime}
+        where id=#{id}
+    </update>
+
+    <insert id="insert" parameterType="property" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO property(name,pro_type_id,is_delete,create_time,update_time)
+        VALUES(#{name},#{pro_type_id},#{isDelete},#{createTime},#{updateTime})
+    </insert>
+
+    <update id="deleteUpdate" parameterType="property">
+        update property
+        set
+        is_delete=true
+        where id=#{id}
+    </update>
+
+</mapper>
+
