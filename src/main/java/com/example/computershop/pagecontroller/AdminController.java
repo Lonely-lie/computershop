@@ -30,4 +30,10 @@ public class AdminController {
   public String listProperty(){
     return "admin/admin_property_list";
   }
+
+  @GetMapping("/admin_product_list")
+  public String listProduct(){
+    return "admin/admin_product_list";
+  }
+
 }

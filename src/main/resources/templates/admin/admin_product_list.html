@@ -32,7 +32,14 @@
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>属性名称</th>
+                                    <th>图片</th>
+                                    <th>产品名称</th>
+                                    <th>产品描述</th>
+                                    <th>价格</th>
+                                    <th>库存数量</th>
+                                    <th>商家ID</th>
+                                    <th>图片管理</th>
+                                    <th>设置属性</th>
                                     <th>编辑</th>
                                     <th>删除</th>
                                 </tr>
@@ -40,10 +47,22 @@
                                 <tbody>
                                 <tr v-for="item in pageItems" v-if="item !== null" >
                                     <td>{{item.id}}</td>
-                                    <td>
-                                        {{item.name}}
+                                    <td><img width="40px" :src="item.pro_img"></img></td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.pro_desc}}</td>
+                                    <td>{{item.pro_price}}</td>
+                                    <td>{{item.rest_stock}}</td>
+                                    <td>{{item.shop_id}}</td>
+                                    <td><!--图片管理-->
+                                        <a  class="btn btn-outline-success btn-sm" :href="'admin_property_list?id=' + item.id ">
+                                            <i class="c-icon cil-align-center"></i>
+                                        </a>
                                     </td>
-                                    <!--属性管理-->
+                                    <td><!--设置属性-->
+                                        <a  class="btn btn-outline-info btn-sm" :href="'admin_product_list?id=' + item.id ">
+                                            <i class="c-icon cil-options-horizontal"></i>
+                                        </a>
+                                    </td>
                                     <td><!--编辑-->
                                         <a  class="btn btn-outline-danger btn-sm" v-on:click="edit(item)">
                                             <i class="c-icon cil-description"></i>
@@ -94,12 +113,13 @@
                                             </div>
                                             <div class="modal-body"><!--编辑模态框内容-->
                                                 <div class="container-fluid">
+                                                    <!--商品名称-->
                                                     <div class="form-group row">
                                                         <label
-                                                                class="col-sm-3 col-form-label">商品类型</label>
+                                                                class="col-sm-3 col-form-label">产品名称</label>
                                                         <div class="col-sm-9">
-                                                            <input v-model="formItem.name" required
-                                                                   pattern="^([-a-zA-Z0-9_\u4e00-\u9fa5]{2,16})$">
+                                                            <input class="form-control" v-model="formItem.name" required
+                                                                    placeholder="产品名称"/>
                                                             <small class="form-text text-muted">
                                                                 文本值规则：必须以英文字母或中文字符开头，2~16个字符（中文、字母、数字、_或-）
                                                             </small>
@@ -107,7 +127,63 @@
                                                                 文本值不符合规则
                                                             </div>
                                                         </div>
-                                                    </div><!--用户名-->
+                                                    </div>
+                                                    <!--商品描述-->
+                                                    <div class="form-group row">
+                                                        <label for="pro_desc"
+                                                               class="col-sm-3 col-form-label">产品描述</label>
+                                                        <div class="col-sm-9">
+                                                            <input class="form-control" type="text" id="pro_desc"
+                                                                   v-model="formItem.pro_desc"
+                                                                   placeholder="产品描述"  >  <!--required pattern="^[1-9]\d*|0$"  maxlength="6"-->
+                                                            <div class="invalid-feedback">
+                                                                请输入（必填）
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--商品价格-->
+                                                    <div class="form-group row">
+                                                        <label for="pro_price"
+                                                               class="col-sm-3 col-form-label">商品价格</label>
+                                                        <div class="col-sm-9">
+                                                            <input class="form-control" type="text" id="pro_price"
+                                                                   v-model="formItem.pro_price"
+                                                                   placeholder="数值数据"  >  <!--required pattern="^[1-9]\d*|0$"  maxlength="6"-->
+                                                            <div class="invalid-feedback">
+                                                                请输入非负整数（必填）
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--库存量-->
+                                                    <div class="form-group row">
+                                                        <label for="rest_stock"
+                                                               class="col-sm-3 col-form-label">库存量</label>
+                                                        <div class="col-sm-9">
+                                                            <input class="form-control" type="text" id="rest_stock"
+                                                                   v-model="formItem.rest_stock"
+                                                                   placeholder="库存量"  >  <!--required pattern="^[1-9]\d*|0$"  maxlength="6"-->
+                                                            <div class="invalid-feedback">
+                                                                请输入非负整数（必填）
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--商家ID-->
+                                                    <div class="form-group row">
+                                                        <label for="shop_id"
+                                                               class="col-sm-3 col-form-label">商家ID</label>
+                                                        <div class="col-sm-9">
+                                                            <input class="form-control" type="text" id="shop_id"
+                                                                   v-model="formItem.shop_id" required
+                                                                   placeholder="商家ID" pattern="^[1-9]\d*|0$" >  <!--required pattern="^[1-9]\d*|0$"  maxlength="6"-->
+                                                            <small class="form-text text-muted">
+                                                                请准确填写存在的商家ID
+                                                            </small>
+                                                            <div class="invalid-feedback">
+                                                                请输入非负整数（必填）
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                                 <div class="modal-footer">
                                                     <div class="modal-footer">
@@ -120,10 +196,9 @@
                                                         </button>
                                                     </div>
                                                 </div>
-
-                                        </form>   <!--novalidate表示让浏览器本身不校验表单-->
+                                            </div>>   <!--novalidate表示让浏览器本身不校验表单-->
+                                        </form>
                                     </div>
-                                    <!-- /.modal-content-->
                                 </div>
                             </div>
                         </div>
@@ -145,13 +220,19 @@
         var r = window.location.search.substr(1).match(reg);  //匹配目标参数
         if (r != null) return unescape(r[2]); return null; //返回参数值
     }
+
     var cid = getUrlParam("id");
     var items = [ ];
     var item = {
         index: -1,
-        id: -1,
-        pro_type_id:cid,
-        name:"材质",
+        id: -1,//商品ID
+        name:"英特尔（Intel）i5-10400F",//商品名
+        pro_img:null,//商品图片
+        pro_desc:"【游戏5GHz“芯”十代】LGA1200芯片接口,六核十二线程",//商品描述
+        pro_price:9999,//商品价格
+        rest_stock:10,//商品库存
+        shop_id:1,//商家ID，参照shop_info表
+        pro_type_id:cid,//商品类型ID，参照pro_type_info表
         isDelete: false,
         createTime: moment().format("YYYY-MM-DD HH:mm:ss"),
         updateTime: moment().format("YYYY-MM-DD HH:mm:ss")//moment().format("YYYY-MM-DD HH:mm:ss")
@@ -166,7 +247,6 @@
             items:items,
             formItem: {},  //编辑功能，空表单，或编辑表单
             item: item,  //空表，用于新增功能 在createItem()
-
         },
         methods: {
             //对items数据进行添加索引
@@ -318,7 +398,7 @@
         watch: {
             offset: function (newValue, oldValue) {
                 if (newValue >= app.items.length || app.items[app.offset] == null) {    //新数据是否大于原数据长度，是否为空
-                    var serviceUrl = 'api/admin_property_list/'+cid+'/properties?offset='+ app.offset + '&size=' + app.serverSize;
+                    var serviceUrl = 'api/admin_product_list/'+cid+'/products?offset='+ app.offset + '&size=' + app.serverSize;
                     axios.get(serviceUrl)
                         .then(function (response) {
                             //把取回来的数据填充到app.items数组中去
@@ -345,7 +425,7 @@
 
     });
 
-    var url= "api/admin_property_list/"+cid+"/properties";
+    var url= "api/admin_product_list/"+cid+"/products";
     axios.get(url)
         .then(function (response) {
             if (response.status===200){
