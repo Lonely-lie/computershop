@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHead::html('管理员后台管理')" >头部内容</head>  <!--包含不替换head标签-->
+
+
+
+<body class="c-app">
+<div class="c-wrapper c-fixed-components">
+
+    <header th:replace="include/admin/adminNavigator::html">导航栏</header>
+
+    <div class="c-body">
+        <main class="c-main">
+            <div class="container-fluid">
+                <div class="fade-in">
+                    <div class="card" id="items-manager">
+                        <div class="card-header">
+                            <ol class="breadcrumb border-0 m-0">
+                                <li class="breadcrumb-item"><a href="admin">分类管理</a></li>
+                                <li class="breadcrumb-item"><a href="#">产品管理</a></li>
+                                <li class="breadcrumb-item active">属性管理</li>
+                                <!-- Breadcrumb Menu-->
+                            </ol>
+                        </div>
+                        <a class="btn btn-ghost-info" @click="">
+                            <i class="c-icon cil-playlist-add"  ></i>&nbsp;修改自动保存
+                        </a>
+                        <div class="card-body">
+                            <div v-for="bean in items" class="form-group">
+                                <label class="col-md-3 col-form-label" :for="'pvid'+bean.id" >{{bean.property.name}}</label>
+                                <input class="form-control" :id="'pvid'+bean.id" type="text" v-model="bean.value" @keyup="update(bean)" >
+                            </div>
+                        </div>
+                    </div>
+<!--                        <div th:replace="include/admin/adminPage::html">页码</div>-->
+                </div>
+            </div>
+        </main>
+    </div>
+        <div th:replace="include/admin/adminFooter::html">页脚</div>
+    </div>
+</div>
+
+
+<script>
+    function  getUrlParam (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+    var pid = getUrlParam("pid");
+    var items = [ ];
+    var item = {
+        index: -1,
+        id: -1,
+        product_id:pid,
+        property_id:null,
+        property:null,
+        product:null,
+        value:null,
+        isDelete: false,
+        createTime: moment().format("YYYY-MM-DD HH:mm:ss"),
+        updateTime: moment().format("YYYY-MM-DD HH:mm:ss")//moment().format("YYYY-MM-DD HH:mm:ss")
+    }; //空表，用于新增功能 在createItem()
+    var app = new Vue({
+        el: '#items-manager',
+        data: {
+            items:items,
+            formItem: {},  //编辑功能，空表单，或编辑表单
+            item: item,  //空表，用于新增功能 在createItem()
+
+        },
+        methods: {
+            update:function(bean){
+                var update_url = url+"/update"
+                $("#pvid"+bean.id).css("border","2px solid yellow");
+                axios.put(update_url,bean).then(function(response) {
+                    if(response.status===200)
+                        $("#pvid"+bean.id).css("border","2px solid green");
+                    else
+                        $("#pvid"+bean.id).css("border","2px solid red");
+                });
+            }
+        },
+    });
+    var url= "api/products/"+pid+"/propertyValues";
+    axios.get(url)
+        .then(function (response) {
+            if (response.status===200){
+                app.items = response.data;
+                app.totalCount = response.data.totalCount;
+                console.log(response);
+                toastr.success("欢迎！");
+            }else {
+                toastr.error("获取属性值出错！");
+            }
+        })
+</script>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+

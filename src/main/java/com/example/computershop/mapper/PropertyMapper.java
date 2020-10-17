@@ -16,4 +16,7 @@ public interface PropertyMapper {
 
     int deleteUpdate(Property property);
 
+    List<Property> findByTypeId(int tid);
+
+    Property  findByPropertyId(int property_id);
 }

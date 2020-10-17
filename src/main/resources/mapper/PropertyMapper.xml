@@ -8,7 +8,7 @@
         <result property="name" column="name"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
-        <result property="deleted" column="is_deleted"/>
+        <result property="delete" column="is_delete"/>
     </resultMap>
 
     <select id="list" resultMap="PropertyResult">
@@ -38,5 +38,15 @@
         where id=#{id}
     </update>
 
+    <select id="listByCategory" parameterType="int" resultMap="PropertyResult">
+        SELECT * FROM property  WHERE pro_type_id=#{tid}
+    </select>
+    <select id="findByTypeId" parameterType="int" resultMap="PropertyResult">
+        SELECT * FROM property  WHERE pro_type_id=#{tid}
+    </select>
+
+    <select id="findByPropertyId" parameterType="int" resultMap="PropertyResult">
+        select * from   property where id=#{property_id}
+    </select>
 </mapper>
 

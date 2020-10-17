@@ -18,7 +18,7 @@
                         <div class="card-header">
                             <ol class="breadcrumb border-0 m-0">
                                 <li class="breadcrumb-item"><a href="admin">分类管理</a></li>
-                                <li class="breadcrumb-item">属性管理</li>
+                                <li class="breadcrumb-item">产品管理</li>
                                 <li class="breadcrumb-item active"></li>
                                 <!-- Breadcrumb Menu-->
                             </ol>
@@ -54,12 +54,12 @@
                                     <td>{{item.rest_stock}}</td>
                                     <td>{{item.shop_id}}</td>
                                     <td><!--图片管理-->
-                                        <a  class="btn btn-outline-success btn-sm" :href="'admin_property_list?id=' + item.id ">
+                                        <a  class="btn btn-outline-success btn-sm" :href="'admin_productImage_list?pid=' + item.id ">
                                             <i class="c-icon cil-align-center"></i>
                                         </a>
                                     </td>
                                     <td><!--设置属性-->
-                                        <a  class="btn btn-outline-info btn-sm" :href="'admin_product_list?id=' + item.id ">
+                                        <a  class="btn btn-outline-info btn-sm" :href="'admin_propertyValue_edit?pid=' + item.id ">
                                             <i class="c-icon cil-options-horizontal"></i>
                                         </a>
                                     </td>

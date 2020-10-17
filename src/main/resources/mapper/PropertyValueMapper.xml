@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.computershop.mapper.PropertyValueMapper">
+
+    <resultMap type="propertyValue" id="PropertyValueResult">
+        <id property="id" column="id"/>
+        <result property="product_id" column="product_id"/>
+        <result property="property_id" column="property_id"/>
+        <result property="value" column="value"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+
+    <select id="findProductVaLueListByPid" resultMap="PropertyValueResult">
+    SELECT * FROM property_value  WHERE product_id=#{pid}
+  </select>
+
+
+<!--    <select id="listCount" resultType="int">-->
+<!--    SELECT COUNT(*)   FROM property_value WHERE pro_type_id=#{id}-->
+<!--  </select>-->
+    <select id="getByPropertyIDAndProductID" parameterType="int" resultMap="PropertyValueResult">
+    SELECT * FROM property_value  WHERE product_id=#{pid} and property_id=#{property_id}
+  </select>
+
+    <insert id="initSave" parameterType="propertyValue">
+        INSERT INTO property_value(product_id,property_id,value,create_time,update_time,is_delete)
+        VALUES(#{product_id},#{property_id},#{value},#{createTime},#{updateTime},#{isDelete})
+    </insert>
+
+
+    <update id="update" parameterType="propertyValue" >
+        update property_value
+        set
+        value=#{value}
+        where id=#{id}
+    </update>
+</mapper>
+

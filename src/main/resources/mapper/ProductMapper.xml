@@ -43,5 +43,10 @@
         where id=#{id}
     </update>
 
+    <select id="findByOne" parameterType="int" resultMap="ProductResult">
+        SELECT * FROM product_info  WHERE id=#{pid}
+    </select>
+
+
 </mapper>
 

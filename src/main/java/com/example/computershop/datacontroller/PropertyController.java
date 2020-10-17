@@ -44,6 +44,4 @@ public class PropertyController {
         propertyMapper.deleteUpdate(property);
         return property;
     }
-
-
 }
