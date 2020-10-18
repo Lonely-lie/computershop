@@ -14,22 +14,9 @@ public class Product {
     private LocalDateTime updateTime =LocalDateTime.now();
     private LocalDateTime createTime =LocalDateTime.now();
     private boolean isDelete;
+    private ProductImage firstProductImage;
 
     public Product() {
-    }
-
-    public Product(Integer id, String name, String pro_img, String pro_desc, double pro_price, Integer rest_stock, Integer shop_id, Integer pro_type_id, LocalDateTime updateTime, LocalDateTime createTime, boolean isDelete) {
-        this.id = id;
-        this.name = name;
-        this.pro_img = pro_img;
-        this.pro_desc = pro_desc;
-        this.pro_price = pro_price;
-        this.rest_stock = rest_stock;
-        this.shop_id = shop_id;
-        this.pro_type_id = pro_type_id;
-        this.updateTime = updateTime;
-        this.createTime = createTime;
-        this.isDelete = isDelete;
     }
 
     public Integer getId() {
@@ -120,21 +107,27 @@ public class Product {
         isDelete = delete;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", pro_img='" + pro_img + '\'' +
-                ", pro_desc='" + pro_desc + '\'' +
-                ", pro_price=" + pro_price +
-                ", rest_stock=" + rest_stock +
-                ", shop_id=" + shop_id +
-                ", pro_type_id=" + pro_type_id +
-                ", updateTime=" + updateTime +
-                ", createTime=" + createTime +
-                ", isDelete=" + isDelete +
-                '}';
+    public ProductImage getFirstProductImage() {
+        return firstProductImage;
+    }
+
+    public void setFirstProductImage(ProductImage firstProductImage) {
+        this.firstProductImage = firstProductImage;
+    }
+
+    public Product(Integer id, String name, String pro_img, String pro_desc, double pro_price, Integer rest_stock, Integer shop_id, Integer pro_type_id, LocalDateTime updateTime, LocalDateTime createTime, boolean isDelete, ProductImage firstProductImage) {
+        this.id = id;
+        this.name = name;
+        this.pro_img = pro_img;
+        this.pro_desc = pro_desc;
+        this.pro_price = pro_price;
+        this.rest_stock = rest_stock;
+        this.shop_id = shop_id;
+        this.pro_type_id = pro_type_id;
+        this.updateTime = updateTime;
+        this.createTime = createTime;
+        this.isDelete = isDelete;
+        this.firstProductImage = firstProductImage;
     }
 }
 

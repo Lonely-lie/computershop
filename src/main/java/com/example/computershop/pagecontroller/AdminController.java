@@ -40,5 +40,10 @@ public class AdminController {
   public String editPropertyValue(){
     return "admin/admin_editPropertyValue";
   }
+  @GetMapping("/admin_productImage_list")
+  public String listProductImage(){
+    return "admin/admin_productImage_list";
+
+  }
 
 }

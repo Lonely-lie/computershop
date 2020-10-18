@@ -5,7 +5,6 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>CoreUI Bootstrap Vue CRUD Demo</title>
     <link rel="apple-touch-icon" sizes="57x57" href="assets/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="assets/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="assets/favicon/apple-icon-72x72.png">
@@ -41,6 +40,20 @@
         gtag('config', 'UA-118965717-3');
         // Bootstrap ID
         gtag('config', 'UA-118965717-5');
+        function checkEmpty(value,text){
+
+            if(null==value || value.length==0){
+                alert(text+ "不能为空");
+                return false;
+            }
+            return true;
+        }
+        function checkDeleteLink(){
+            var confirmDelete = confirm("确认要删除");
+            if(confirmDelete)
+                return true;
+            return false;
+        }
     </script>
     <script src="vendors/@coreui/coreui/js/coreui.bundle.min.js"></script>
     <script src="vendors/@coreui/icons/js/svgxuse.min.js"></script>

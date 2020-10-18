@@ -47,7 +47,7 @@
                                 <tbody>
                                 <tr v-for="item in pageItems" v-if="item !== null" >
                                     <td>{{item.id}}</td>
-                                    <td><img width="40px" :src="item.pro_img"></img></td>
+                                    <td><img v-if="item.firstProductImage !== null" width="40px" :src="'img/productSingle/'+item.firstProductImage.id+'.jpg'"></td>
                                     <td>{{item.name}}</td>
                                     <td>{{item.pro_desc}}</td>
                                     <td>{{item.pro_price}}</td>
@@ -292,7 +292,7 @@
                     item = this.createItem();
                 }
                 item.updateTime=moment().format("YYYY-MM-DD HH:mm:ss");
-                this.formItem = JSON.parse(JSON.stringify(item));//老师代码
+                this.formItem = JSON.parse(JSON.stringify(item));
                 $('.needs-validation').removeClass('was-validated');//给form标签删除【was-validated】元素，告诉浏览器不显示校验结果
                 $('#editModal').modal('show');
             },  //编辑功能

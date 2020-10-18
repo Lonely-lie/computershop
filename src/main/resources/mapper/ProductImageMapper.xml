@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.computershop.mapper.ProductImageMapper">
+
+    <resultMap type="productImage" id="ProductImageResult">
+        <id property="id" column="id"/>
+        <result property="pro_type_id" column="pro_type_id"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <select id="finSingleByPid" resultMap="ProductImageResult">
+    SELECT * FROM productImage  WHERE product_id=#{pid} and type=#{type_single}
+  </select>
+
+    <select id="finDetailByPid" resultMap="ProductImageResult">
+    SELECT * FROM productImage  WHERE product_id=#{pid} and type=#{type_detail}
+  </select>
+
+    <insert id="add" parameterType="productImage" useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO productImage(product_id,type)
+        VALUES(#{product_id},#{type})
+    </insert>
+
+    <select id="findOne" parameterType="int" resultMap="ProductImageResult">
+        SELECT * FROM productImage  WHERE id=#{pid}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from productImage where id=#{id}
+    </delete>
+
+</mapper>
+
