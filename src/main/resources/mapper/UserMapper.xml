@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.computershop.mapper.UserMapper">
+
+    <resultMap type="user" id="UserResult">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="img_url" column="img_url"/>
+        <result property="sex" column="sex"/>
+        <result property="salt" column="salt"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="delete" column="is_delete"/>
+    </resultMap>
+
+    <select id="listUser" resultMap="UserResult">
+    SELECT * FROM user_info   LIMIT #{offset},#{size}
+  </select>
+
+    <select id="listCount" resultType="int">
+    SELECT COUNT(*)   FROM user_info
+  </select>
+
+
+
+</mapper>
+

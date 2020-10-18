@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHead::html('产品图片管理')" >头部内容</head>  <!--包含不替换head标签-->
+
+
+
+<body class="c-app">
+<div th:replace="include/admin/adminLeft::html"></div>
+
+<div class="c-wrapper c-fixed-components">
+
+    <header th:replace="include/admin/adminNavigator::html">导航栏</header>
+
+    <div class="c-body">
+        <main class="c-main">
+            <div class="container-fluid">
+                <div class="fade-in">
+
+                    <div class="card" id="items-manager">
+                        <div class="card-header">
+                            <ol class="breadcrumb border-0 m-0">
+                                <li class="badge badge-pill badge-primary">用户管理</li>
+                                <!--<li class="breadcrumb-item"><a href="#">Admin</a></li>
+                                <li class="breadcrumb-item active">Dashboard</li>-->
+                                <!-- Breadcrumb Menu-->
+                            </ol>
+                        </div>
+                        <a class="btn btn-ghost-info" @click="edit(null)">
+                            <i class="c-icon cil-playlist-add"  ></i>&nbsp;新增
+                        </a>
+                        <div class="card-body">
+                            <!--表格-->
+                            <table class="table table-responsive-sm table-bordered table-striped table-sm text-center">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>头像</th>
+                                    <th>用户名</th>
+                                    <th>密码</th>
+                                    <th>性别</th>
+                                    <th>创建时间</th>
+                                    <th>修改时间</th>
+                                    <th>状态</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="item in pageItems" v-if="item !== null" >
+                                    <td>{{item.id}}</td>
+                                    <td>img</td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.password}}</td>
+                                    <td>
+                                        <span v-if="item.sex" class="badge badge-danger">男</span>
+                                        <span v-else class="badge badge-success ">女</span></td>
+                                    <td>{{item.createTime}}</td>
+                                    <td>{{item.updateTime}}</td>
+                                    <td>
+                                        <span v-if="item.delete" class="badge badge-danger">无效</span>
+                                        <span v-else class="badge badge-success ">有效</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:replace="include/admin/adminPage::html">页码</div>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+    <div th:replace="include/admin/adminFooter::html">页脚</div>
+</div>
+</div>
+
+<script>
+    function  getUrlParam (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+    var items = [ ];
+    var item = {
+        index: -1,
+        id: -1,
+        name:null,
+        password:null,
+        img_url:null,
+        sex:null,
+        salt:null,
+        updateTime:null,
+        createTime:null,
+        isDelete:null,
+    };
+    var app = new Vue({
+        el: '#items-manager',
+        data: {
+            item: item,  //空表，用于新增功能 在createItem()
+            offset: 0,  //第几条数据
+            clientSize: 5, //显示数量
+            serverSize: 10,    //服务器取数量
+            totalCount: 0,     //总数据数量
+            items:items
+        },
+        mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+            this.list();
+        },
+        methods: {
+            sortIndex: function regenerateIndex() {
+                _.forEach(this.items, function (item, index) {
+                    if (item) {
+                        item.index = index;
+                        item.selected = false;
+                    }
+                });
+            },
+            list:function (){
+                var serviceUrl = 'api/users?offset=' + this.offset + '&size=' + this.serverSize;
+                axios.get(serviceUrl)
+                    .then(function (response) {
+                        app.items = response.data.items;
+                        app.totalCount = response.data.totalCount;
+                        if (response.status===200){
+                            app.items = response.data.items;
+                            app.totalCount = response.data.totalCount;
+                            app.sortIndex();
+                            console.log(response);
+                            toastr.success("欢迎！");
+                        }else {
+                            toastr.error("获取User出错！");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });//获取全数据
+            },
+            edit:function (){
+                alert("增加是前台用户自行注册！\n" +
+                    "删除不提供，用户信息是最重要资料\n" +
+                    "修改不提供，由前台用户自己完成")
+            }
+        },
+        computed: {
+            pageItems: function pageItems() {//返回要输出的开头索引，结束索引
+                var startIndex = this.offset;   //从哪里开始
+                var endIndex = startIndex + this.clientSize - 1;  //从哪里结束
+                if (1) {//不搜索 进行显示全数据
+                    return this.items.filter(function (value, index) {
+                        return index >= startIndex && index <= endIndex;
+                    });
+                }
+            },
+            pageLinks: function () {
+                var links = [1];
+                var i = 2;
+                var total = Math.ceil(this.totalCount / this.clientSize); //默认总页数
+
+                total = Math.ceil(this.totalCount / this.clientSize); //没搜索总页数
+
+                if (total <= 6) {//判断是否展开，或者总页数小于6 就全部显示
+                    for (i = 2; i <= total; i++) {
+                        links.push(i);
+                    }
+                } else {
+                    var start = this.offset / this.clientSize - 2;
+                    var end = this.offset / this.clientSize + 3 >= total ? total - 1 : this.offset / this.clientSize + 2;
+                    if (start > 2) {
+                        for (i = start; i <= end; i++) {
+                            links.push(i);
+                        }
+                    } else {
+                        for (i = 2; i <= 6; i++) {
+                            links.push(i);
+                        }
+                    }
+                    if (this.offset / this.clientSize > 4) {
+                        links.splice(1, 0, "...");
+                    }
+                    if (this.offset / this.clientSize + 3 < total) {
+                        links.splice(8, 0, "...");
+                    }
+                    links.push(total);
+                }
+                return links;
+            }
+
+        },
+        watch: {
+            offset: function (newValue, oldValue) {
+                if (newValue >= app.items.length || app.items[app.offset] == null) {    //新数据是否大于原数据长度，是否为空
+                    var serviceUrl = 'api/users?offset=' + app.offset + '&size=' + app.serverSize;
+                    axios.get(serviceUrl)
+                        .then(function (response) {
+                            //把取回来的数据填充到app.items数组中去
+                            var i = 0;
+                            var newItems = response.data.items;
+                            //判断是否需要填充空元素
+                            if (newValue > app.items.length) {
+                                for (i = app.items.length; i < app.offset; i++) {
+                                    app.items.push(null);
+                                }
+                            }
+                            for (i = 0; i < newItems.length; i++) {
+                                app.items.splice(app.offset + i, 1, newItems[i]);
+                            }
+                            app.regenerateIndex();
+                            return;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            }
+        }
+    });
+</script>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+

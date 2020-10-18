@@ -6,6 +6,8 @@
 
 
 <body class="c-app">
+<div th:replace="include/admin/adminLeft::html"></div>
+
 <div class="c-wrapper c-fixed-components">
 
     <header th:replace="include/admin/adminNavigator::html">导航栏</header>
@@ -18,7 +20,7 @@
                         <div class="card-header">
                             <ol class="breadcrumb border-0 m-0">
                                 <li class="breadcrumb-item"><a href="admin">分类管理</a></li>
-                                <li class="breadcrumb-item"><a href="#">产品管理</a></li>
+                                <li class="breadcrumb-item"><a :href="'admin_product_list?id='+product.pro_type_id">产品管理</a></li>
                                 <li class="breadcrumb-item active">{{product.name}}</li>
                                 <li class="breadcrumb-item active">属性管理</li>
                                 <!-- Breadcrumb Menu-->

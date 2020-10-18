@@ -72,6 +72,7 @@ public class ProductImageController {
             e.printStackTrace();
         }
 
+        //单个图片单个图片，还要创建 small 和 middle 两种不同大小的图片，用的是 ImageUtil.resizeImage 函数
         if (productImageMapper.type_single.equals(productImage.getType())) {
             String imageFolder_small = request.getServletContext().getRealPath("img/productSingle_small");
             String imageFolder_middle = request.getServletContext().getRealPath("img/productSingle_middle");

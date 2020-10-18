@@ -45,5 +45,10 @@ public class AdminController {
     return "admin/admin_productImage_list";
 
   }
+  @GetMapping(value="/admin_user_list")
+  public String listUser(){
+    return "admin/admin_user_list";
+
+  }
 
 }
