@@ -10,4 +10,5 @@ public interface UserMapper {
     List<User> listUser(@Param("offset") int offset, @Param("size") int size);
     int listCount();
 
+    User finByOne(int user_id);
 }

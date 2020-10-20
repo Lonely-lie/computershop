@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="include/admin/adminHead::html('管理员后台管理')" >头部内容</head>  <!--包含不替换head标签-->
+
+
+
+<body class="c-app">
+<div th:replace="include/admin/adminLeft::html"></div>
+
+<div class="c-wrapper c-fixed-components">
+
+    <header th:replace="include/admin/adminNavigator::html">导航栏</header>
+
+    <div class="c-body">
+        <main class="c-main">
+            <div class="container-fluid">
+                <div class="fade-in">
+                    <div class="card" id="items-manager">
+                        <div class="card-header">
+                            <ol class="breadcrumb border-0 m-0">
+                                <li class="breadcrumb-item"><a href="admin">分类管理</a></li>
+                                <li class="breadcrumb-item">产品管理</li>
+                                <li class="breadcrumb-item active"></li>
+                                <!-- Breadcrumb Menu-->
+                            </ol>
+                        </div>
+                        <a class="btn btn-ghost-info" >
+                            <i class="c-icon cil-playlist-add"  ></i>&nbsp;订单
+                        </a>
+                        <div class="card-body">
+                            <!--表格-->
+                            <table class="table table-responsive-sm table-bordered table-striped table-sm text-center">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>状态</th>
+                                    <th>金额</th>
+                                    <th>商品数量</th>
+                                    <th>买家名称</th>
+                                    <th>创建时间</th>
+                                    <th>支付时间</th>
+                                    <th>发货时间</th>
+                                    <th>确认收货时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="item in items ">
+                                    <tr >
+                                        <td>
+                                            {{item.id}}
+                                        </td>
+                                        <td>
+                                            {{item.statusDesc}}
+                                        </td>
+                                        <td>
+                                            {{item.total}}
+                                        </td>
+                                        <td>
+                                            {{item.totalNumber}}
+                                        </td>
+                                        <td>
+                                            {{item.user.name}}
+                                        </td>
+                                        <td>
+                                            {{item.createTime}}
+                                        </td>
+                                        <td>
+                                            {{item.payDate}}
+                                        </td>
+                                        <td>
+                                            {{item.deliveryDate}}
+                                        </td>
+                                        <td>
+                                            {{item.confirmDate}}
+                                        </td>
+                                        <td>
+                                            <button @click="showProducts(item)" class="orderPageCheckOrderItems btn btn-primary btn-xs">查看详情</button>
+                                            <button v-if="item.status=='waitDelivery'" @click="deliveryOrder(item,$event)" class="btn btn-primary btn-xs">发货</button>
+                                        </td>
+                                    </tr>
+                                    <tr style="display: none;"  :id="'products'+item.id">
+                                        <td colspan="10" align="center">
+                                            <div >
+                                                <table width="800px" align="center">
+                                                    <tr v-for="orderItem in item.orderItems">
+                                                        <td align="left">
+                                                            <img width="40px" height="40px" :src="'img/productSingle/'+orderItem.product.firstProductImage.id+'.jpg'">
+                                                        </td>
+                                                        <td>
+                                                            <a :href="'product?product.id='+orderItem.product.id">
+                                                                <span>{{orderItem.product.name}}</span>
+                                                            </a>
+                                                        </td>
+                                                        <td align="right">
+                                                            <span >{{orderItem.number}}个</span>
+                                                        </td>
+                                                        <td align="right">
+                                                            <span >单价：￥{{orderItem.product.pro_price}}</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div th:replace="include/admin/adminPage::html">页码</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+
+        <div th:replace="include/admin/adminFooter::html">页脚</div>
+    </div>
+</div>
+
+
+<script>
+    function  getUrlParam (name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+
+    // var cid = getUrlParam("id");
+    var items = [ ];
+    var app = new Vue({
+        el: '#items-manager',
+        data: {
+            offset: 0,  //第几条数据
+            clientSize: 5, //显示数量
+            serverSize: 10,    //服务器取数量
+            totalCount: 0,     //总数据数量
+            items:items,
+        },
+        mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+            this.list(0);
+        },
+        methods: {
+            //对items数据进行添加索引
+            sortIndex: function regenerateIndex() {
+                _.forEach(this.items, function (item, index) {
+                    if (item) {
+                        item.index = index;
+                        item.selected = false;
+                    }
+                });
+            },
+            list:function(start){
+                var url = "orders"
+                axios.get(url).then(function(response) {
+                    if (response.status===200){
+                        app.items = response.data.items;
+                        app.totalCount = response.data.totalCount;
+                        app.sortIndex();
+                        console.log(response);
+                        toastr.success("欢迎！");
+                    }else {
+                        toastr.error("获取订单出错！");
+                    }
+                });
+            },
+            showProducts: function(order){
+                var id = order.id;
+                var now = document.getElementById("products"+id).style.display;
+                if (now === "none"){
+                    document.getElementById("products"+id).style.display="";
+                }else {
+                    document.getElementById("products"+id).style.display="none";
+                }
+            },
+            deliveryOrder:function(order,e){
+                order.updateTime=moment().format("YYYY-MM-DD HH:mm:ss");
+                order.deliveryDate=moment().format("YYYY-MM-DD HH:mm:ss");
+                var url =  "deliveryOrder/"+order.id;
+                axios.put(url).then(function(response) {
+                    // app.list();
+                    if (response.status===200){
+                        $(e.target).hide();
+                        order.status="待收";
+                    }else {
+                        toastr.error("发货失败！");
+                    }
+                });
+            }
+        },
+        computed: {
+            pageItems: function pageItems() {//返回要输出的开头索引，结束索引
+                var startIndex = this.offset;   //从哪里开始
+                var endIndex = startIndex + this.clientSize - 1;  //从哪里结束
+                if (1) {//不搜索 进行显示全数据
+                    return this.items.filter(function (value, index) {
+                        return index >= startIndex && index <= endIndex;
+                    });
+                }
+            },
+            pageLinks: function () {
+                var links = [1];
+                var i = 2;
+                var total = Math.ceil(this.totalCount / this.clientSize); //默认总页数
+
+                total = Math.ceil(this.totalCount / this.clientSize); //没搜索总页数
+
+                if (total <= 6) {//判断是否展开，或者总页数小于6 就全部显示
+                    for (i = 2; i <= total; i++) {
+                        links.push(i);
+                    }
+                } else {
+                    var start = this.offset / this.clientSize - 2;
+                    var end = this.offset / this.clientSize + 3 >= total ? total - 1 : this.offset / this.clientSize + 2;
+                    if (start > 2) {
+                        for (i = start; i <= end; i++) {
+                            links.push(i);
+                        }
+                    } else {
+                        for (i = 2; i <= 6; i++) {
+                            links.push(i);
+                        }
+                    }
+                    if (this.offset / this.clientSize > 4) {
+                        links.splice(1, 0, "...");
+                    }
+                    if (this.offset / this.clientSize + 3 < total) {
+                        links.splice(8, 0, "...");
+                    }
+                    links.push(total);
+                }
+                return links;
+            }
+        },
+        watch: {
+            offset: function (newValue, oldValue) {
+                if (newValue >= app.items.length || app.items[app.offset] == null) {    //新数据是否大于原数据长度，是否为空
+                    var serviceUrl = '/orders?offset='+ app.offset + '&size=' + app.serverSize;
+                    axios.get(serviceUrl)
+                        .then(function (response) {
+                            //把取回来的数据填充到app.items数组中去
+                            var i = 0;
+                            var newItems = response.data.items;
+                            //判断是否需要填充空元素
+                            if (newValue > app.items.length) {
+                                for (i = app.items.length; i < app.offset; i++) {
+                                    app.items.push(null);
+                                }
+                            }
+                            for (i = 0; i < newItems.length; i++) {
+                                app.items.splice(app.offset + i, 1, newItems[i]);
+                            }
+                            app.sortIndex();
+                            return;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            }
+        }
+
+    });
+</script>
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+

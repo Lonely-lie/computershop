@@ -22,7 +22,9 @@
     SELECT COUNT(*)   FROM user_info
   </select>
 
-
+    <select id="finByOne" parameterType="int" resultMap="UserResult">
+    SELECT * FROM user_info   where id=#{user_id}
+  </select>
 
 </mapper>
 

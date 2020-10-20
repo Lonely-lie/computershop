@@ -48,6 +48,10 @@ public class AdminController {
   @GetMapping(value="/admin_user_list")
   public String listUser(){
     return "admin/admin_user_list";
+  }
+  @GetMapping(value="/admin_order_list")
+  public String listOrder(){
+    return "admin/admin_order_list";
 
   }
 
