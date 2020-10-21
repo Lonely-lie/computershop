@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.computershop.mapper.UserAddressMapper">
+
+    <resultMap type="userAddress" id="UserAddressResult">
+        <id property="id" column="id"/>
+        <result property="cel_phone" column="cel_phone"/>
+        <result property="contact_name" column="contact_name"/>
+        <result property="big_address" column="big_address"/>
+        <result property="detail_address" column="detail_address"/>
+        <result property="user_id" column="user_id"/>
+        <result property="is_default" column="is_default"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="createTime" column="createTime"/>
+        <result property="isDelete" column="isDelete"/>
+
+    </resultMap>
+
+
+    <select id="findOneByID" resultMap="UserAddressResult">
+    SELECT * FROM user_address_info  WHERE id=#{user_address_id}
+    </select>
+
+
+
+
+
+
+</mapper>
+

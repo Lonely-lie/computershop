@@ -7,33 +7,27 @@ import java.util.List;
 import com.example.computershop.service.OrderService;
 public class Order {
 
+    private List<OrderItem> orderItems; //获取订单下的订单详情
+    private float total; //总金额
+    private Integer totalNumber;    //总购买数量
+    private String statusDesc;      //订单状态
+
+    private User user;  //用户对象，用于显示购买用户
+    private UserAddress userAddress;    //用户地址对象
+
 
     private Integer id; //订单ID
-    private User user;  //用户对象，用于显示购买用户
-
-    private List<OrderItem> orderItems;
-    private float total;
-    private Integer totalNumber;
-    private String statusDesc;
-
-
-
-
-
     private String orderCode;   //订单编码
-    private String address;
-    private String postCode;
-    private String receiver;
-    private String mobile;
-    private String userMessage;
-    private Integer user_id;
-    private LocalDateTime payDate;
-    private LocalDateTime deliveryDate;
-    private LocalDateTime confirmDate;
-    private String status;
-    private LocalDateTime updateTime =LocalDateTime.now();
-    private LocalDateTime createTime =LocalDateTime.now();
-    private boolean isDelete;
+    private String userMessage; //用户备注信息
+    private Integer user_id;    //外键uid，指向用户表id字段
+    private Integer user_address_id;    //用户地址ID，参考user_address_info
+    private LocalDateTime payDate;  //支付日期
+    private LocalDateTime deliveryDate; //发货日期
+    private LocalDateTime confirmDate;  //确认收货日期
+    private String status;              //订单状态
+    private LocalDateTime updateTime =LocalDateTime.now();  //更新时间
+    private LocalDateTime createTime =LocalDateTime.now();  //创建时间
+    private boolean isDelete;                               //删除状态
 
     public Order() {
     }
@@ -65,23 +59,6 @@ public class Order {
         }
         statusDesc = desc;
         return statusDesc;
-    }
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public List<OrderItem> getOrderItems() {
@@ -116,44 +93,36 @@ public class Order {
         this.statusDesc = statusDesc;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public UserAddress getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(UserAddress userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getOrderCode() {
         return orderCode;
     }
 
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     public String getUserMessage() {
@@ -170,6 +139,14 @@ public class Order {
 
     public void setUser_id(Integer user_id) {
         this.user_id = user_id;
+    }
+
+    public Integer getUser_address_id() {
+        return user_address_id;
+    }
+
+    public void setUser_address_id(Integer user_address_id) {
+        this.user_address_id = user_address_id;
     }
 
     public LocalDateTime getPayDate() {

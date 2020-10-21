@@ -6,7 +6,11 @@ public class OrderItem {
     private Integer order_id;//订单ID
     private Integer user_id;//用户ID
     private Integer number;//购买数量
+
     private Product product;
+
+
+
     public OrderItem() {
     }
 

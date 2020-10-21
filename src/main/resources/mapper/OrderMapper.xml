@@ -5,19 +5,16 @@
     <resultMap type="order" id="OrderResult">
         <id property="id" column="id"/>
         <result property="orderCode" column="orderCode"/>
-        <result property="address" column="address"/>
-        <result property="postCode" column="postCode"/>
-        <result property="receiver" column="receiver"/>
-        <result property="mobile" column="mobile"/>
         <result property="userMessage" column="userMessage"/>
         <result property="user_id" column="user_id"/>
+        <result property="user_address_id" column="user_address_id"/>
         <result property="payDate" column="payDate"/>
         <result property="deliveryDate" column="deliveryDate"/>
         <result property="confirmDate" column="confirmDate"/>
         <result property="status" column="status"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="isDelete" column="is_delete"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="createTime" column="createTime"/>
+        <result property="isDelete" column="isDelete"/>
     </resultMap>
 
 

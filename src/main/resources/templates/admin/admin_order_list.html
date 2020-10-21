@@ -183,7 +183,10 @@
                     // app.list();
                     if (response.status===200){
                         $(e.target).hide();
-                        order.status="待收";
+                        order.updateTime=moment().format("YYYY-MM-DD HH:mm:ss");
+                        order.deliveryDate=moment().format("YYYY-MM-DD HH:mm:ss");
+                        order.status="waitConfirm"
+                        order.statusDesc="待收"
                     }else {
                         toastr.error("发货失败！");
                     }

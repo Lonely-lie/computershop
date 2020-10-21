@@ -27,6 +27,8 @@ public class OrderController {
     private ProductImageMapper productImageMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserAddressMapper userAddressMapper;
     @GetMapping("/orders")
     public PagingResult<Order> list(@RequestParam(required = false,defaultValue = "0") int offset, @RequestParam(required = false,defaultValue = "10") int size) {
         PagingResult<Order> result = new PagingResult<>();
@@ -40,8 +42,8 @@ public class OrderController {
     @PutMapping("deliveryOrder/{oid}")
     public Object deliveryOrder(@PathVariable int oid) throws IOException {
         Order order = orderMapper.findByOrderId(oid);
-        order.setDeliveryDate(LocalDateTime.now());
-        order.setStatus(OrderService.waitConfirm);
+        order.setDeliveryDate(LocalDateTime.now()); //设置发货时间
+        order.setStatus(OrderService.waitConfirm);  //设置订单状态
         orderMapper.update(order);
         return order;
     }
@@ -70,6 +72,7 @@ public class OrderController {
         order.checkStatus();
         List<OrderItem> orderItems = orderItemMapper.findByOrderOrderByIdDesc(order.getId());
         order.setUser(userMapper.finByOne(order.getUser_id()));
+        order.setUserAddress(userAddressMapper.findOneByID(order.getUser_address_id()));
         float total = 0;
         int totalNumber = 0;
         for (OrderItem oi :orderItems) {
