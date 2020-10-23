@@ -48,10 +48,10 @@ public class ProductImageController {
 
     @PostMapping("/productImages")
     public Object add(@PathVariable("pid") int pid, @RequestParam("type") String type, MultipartFile image, HttpServletRequest request) throws Exception {
-        ProductImage productImage = new ProductImage();
-        productImage.setProduct_id(pid);
-        productImage.setType(type);
-        productImageMapper.add(productImage);
+        ProductImage productImage = new ProductImage();     //创建productImage对象
+        productImage.setProduct_id(pid);//设置image对象的pro_id值
+        productImage.setType(type);//设置对象的图片类型
+        productImageMapper.add(productImage);//在数据库图片数据中添加一条记录
 
         String folder = "img/";
         if (productImageMapper.type_single.equals(productImage.getType())) {
@@ -59,9 +59,17 @@ public class ProductImageController {
         } else {
             folder += "productDetail";
         }
+//        System.out.println("1"+request);
+//        System.out.println("2"+request.getServletContext());//  org.apache.catalina.core.ApplicationContextFacade@2367296e
+//        System.out.println("3"+request.getServletContext().getRealPath("/"));//  D:\IdeaProjects\computershop\src\main\webapp\
+//        System.out.println("4"+request.getServletContext().getRealPath(folder));   //  D:\IdeaProjects\computershop\src\main\webapp\img\productSingle   2.jpg
+
         File imageFolder = new File(request.getServletContext().getRealPath(folder));
         File file = new File(imageFolder, productImage.getId() + ".jpg");
-        String fileName = file.getName();
+        String fileName = file.getName(); //37.jpg
+//        System.out.println("1"+fileName);   //37.jpg
+//        System.out.println("2"+file.getParentFile());//D:\IdeaProjects\computershop\src\main\webapp\img\productSingle
+//        System.out.println("3"+file.getParent());    //D:\IdeaProjects\computershop\src\main\webapp\img\productSingle
         if (!file.getParentFile().exists())
             file.getParentFile().mkdirs();
         try {

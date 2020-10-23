@@ -1,5 +1,6 @@
 package com.example.computershop.domain.entity;
 
+import java.beans.Transient;
 import java.time.LocalDateTime;
 
 public class Product {

@@ -65,6 +65,15 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
 
+        <!--<resources>&lt;!&ndash;把资源webapp打包进jar文件&ndash;&gt;
+            <resource>
+                <directory>src/main/webapp</directory>
+                <targetPath>META-INF/resources</targetPath>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+        </resources>-->
+    </build>
 </project>
