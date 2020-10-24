@@ -3,7 +3,18 @@ package com.example.computershop.domain.entity;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 public class ProductType {
+
+
+    List<Product> products; //代表一个分类下有多个产品。
+    List<List<Product>> productsByRow;//一个分类会对应多行产品，而一行产品里又有多个产品记录
+
+
+
+
+
 
     private Integer id;
     private String name;
@@ -20,6 +31,22 @@ public class ProductType {
         this.updateTime = updateTime;
         this.createTime = createTime;
         this.isDelete = isDelete;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public List<List<Product>> getProductsByRow() {
+        return productsByRow;
+    }
+
+    public void setProductsByRow(List<List<Product>> productsByRow) {
+        this.productsByRow = productsByRow;
     }
 
     public Integer getId() {

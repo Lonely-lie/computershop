@@ -2,8 +2,17 @@ package com.example.computershop.domain.entity;
 
 import java.beans.Transient;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Product {
+
+    private ProductImage firstProductImage;
+
+
+
+
+
+
     private Integer id; //商品ID
     private String name;    //商品名
     private String pro_img; //商品图片
@@ -15,10 +24,11 @@ public class Product {
     private LocalDateTime updateTime =LocalDateTime.now();
     private LocalDateTime createTime =LocalDateTime.now();
     private boolean isDelete;
-    private ProductImage firstProductImage;
 
     public Product() {
     }
+
+
 
     public Integer getId() {
         return id;
@@ -116,19 +126,5 @@ public class Product {
         this.firstProductImage = firstProductImage;
     }
 
-    public Product(Integer id, String name, String pro_img, String pro_desc, double pro_price, Integer rest_stock, Integer shop_id, Integer pro_type_id, LocalDateTime updateTime, LocalDateTime createTime, boolean isDelete, ProductImage firstProductImage) {
-        this.id = id;
-        this.name = name;
-        this.pro_img = pro_img;
-        this.pro_desc = pro_desc;
-        this.pro_price = pro_price;
-        this.rest_stock = rest_stock;
-        this.shop_id = shop_id;
-        this.pro_type_id = pro_type_id;
-        this.updateTime = updateTime;
-        this.createTime = createTime;
-        this.isDelete = isDelete;
-        this.firstProductImage = firstProductImage;
-    }
 }
 

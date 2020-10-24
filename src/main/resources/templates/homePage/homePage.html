@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="include/homePage/header::html" ></head><!--header css js  公共函数-->
+<body>
+<div id="workingArea">
+    <div th:replace="include/homePage/top::html" ></div><!--页面顶部信息， 登录，购物车-->
+    <div th:replace="include/homePage/search::html" ></div><!--logo+搜索部分-->
+    <div th:replace="include/homePage/home/homePage::html" ></div><!--页面中间数据填充部分-->
+    <div th:replace="include/homePage/footer::html" ></div><!--页面底部页脚-->
+</div>
+</body>
+</html>
+

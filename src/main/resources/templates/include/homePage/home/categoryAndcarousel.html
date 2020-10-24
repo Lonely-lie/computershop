@@ -1,0 +1,45 @@
+<div th:fragment="html">
+    <img src="img/site/catear.png" id="catear" class="catear"/><!--受调控-->
+
+    <div class="categoryWithCarousel">
+
+
+        <div class="headbar show1">
+            <div class="head ">
+
+                <span style="margin-left:10px" class="glyphicon glyphicon-th-list"></span>
+                <span style="margin-left:10px" >商品分类</span>
+
+            </div>
+
+            <div class="rightMenu"><!--横向分类-->
+
+<!--                <span><a href=""><img src="img/site/chaoshi.png"/></a></span>-->
+<!--                <span><a href=""><img src="img/site/guoji.png"/></a></span>-->
+                <span v-for="c,index in categories" v-if='index<=3'>
+						<a :href="'category?cid='+c.id">{{c.name}}</a>
+					</span>
+            </div>
+
+        </div>
+
+        <div style="position: relative">
+            <div th:replace="include/homePage/home/categoryMenu::html" ></div> <!--左边竖向商品分类条目-->
+        </div>
+
+        <div style="position: relative;left: 0;top: 0;">
+            <div th:replace="include/homePage/home/productsAsideCategorys::html" ></div><!--分类下的各个商品推荐-->
+        </div>
+
+
+        <div th:replace="include/homePage/home/carousel::html" ></div>
+
+
+        <div class="carouselBackgroundDiv">
+        </div>
+
+    </div>
+</div>
+
+
+

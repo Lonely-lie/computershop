@@ -18,6 +18,7 @@ public interface ProductTypeMapper {
 
     int deleteUpdate(ProductType productType);
 
+    List<ProductType> listAll();//获取商品类型不需要分页
 
 
 }

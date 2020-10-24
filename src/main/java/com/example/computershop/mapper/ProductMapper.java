@@ -18,4 +18,7 @@ public interface ProductMapper {
     int deleteUpdate(Product product);
 
     Product findByOne( int pid);
+
+
+    List<Product> findListProductByPro_type_id(int pro_type_id);
 }

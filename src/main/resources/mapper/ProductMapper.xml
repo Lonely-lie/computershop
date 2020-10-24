@@ -19,6 +19,9 @@
     <select id="list" resultMap="ProductResult">
     SELECT * FROM product_info  WHERE pro_type_id=#{id} and is_delete=0 LIMIT #{offset},#{size}
   </select>
+    <select id="findListProductByPro_type_id" resultMap="ProductResult">
+    SELECT * FROM product_info  WHERE pro_type_id=#{pro_type_id} and is_delete=0
+  </select>
 
     <select id="listCount" resultType="int">
     SELECT COUNT(*)   FROM product_info WHERE is_delete=0 and pro_type_id=#{id}

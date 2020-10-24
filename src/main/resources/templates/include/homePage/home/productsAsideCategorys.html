@@ -1,0 +1,11 @@
+<div th:fragment="html">
+	<div  :cid="c.id" class="productsAsideCategorys" v-for="c in categories">
+		<div class="row show1" v-for="ps in c.productsByRow">
+			<a :href="'product?pid='+p.id" v-for="p in ps" v-if="p.pro_desc.length!=0">
+				{{p.pro_desc | subTitleFilter}}     <!--分类下的各个商品推荐-->
+			</a>
+			<div class="seperator"></div>
+		</div>
+	</div>
+</div>
+

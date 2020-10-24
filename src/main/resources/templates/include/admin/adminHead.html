@@ -39,7 +39,7 @@
         gtag('config', 'UA-118965717-3');
         // Bootstrap ID
         gtag('config', 'UA-118965717-5');
-        function checkEmpty(value,text){
+        function checkEmpty(value,text){//判断添加图片是否有为空
 
             if(null==value || value.length==0){
                 alert(text+ "不能为空");
@@ -47,7 +47,7 @@
             }
             return true;
         }
-        function checkDeleteLink(){
+        function checkDeleteLink(){//是否确定删除图片
             var confirmDelete = confirm("确认要删除");
             if(confirmDelete)
                 return true;

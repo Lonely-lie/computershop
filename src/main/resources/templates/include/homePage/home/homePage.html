@@ -1,0 +1,113 @@
+<div th:fragment="html">
+    <script>
+        //鼠标悬停在分类条目时，实现选择器，背景变白，字变蓝，并显示条目下的商品列
+        function showProductsAsideCategorys(cid){
+            $("div.eachCategory[cid="+cid+"]").css("background-color","white");
+            $("div.eachCategory[cid="+cid+"] a").css("color","#87CEFA");
+            $("div.productsAsideCategorys[cid="+cid+"]").show();
+        }
+        //鼠标离开分类条目时，实现选择器，背景变原样，字变黑，隐藏条目下商品列
+        function hideProductsAsideCategorys(cid){
+            $("div.eachCategory[cid="+cid+"]").css("background-color","#e2e2e3");
+            $("div.eachCategory[cid="+cid+"] a").css("color","#000");
+            $("div.productsAsideCategorys[cid="+cid+"]").hide();
+        }
+        //设置页面元素的选择器，悬停时的效果和离开效果，和页面布局调整
+        function homePageRegisterListeners(){
+            //鼠标悬停在分类条目时，实现选择器，背景变白，字变蓝，并显示条目下的商品列
+            $("div.eachCategory").mouseenter(function(){ //mouseenter：鼠标选择触发
+                var cid = $(this).attr("cid");           //返回属性为cid的值
+                showProductsAsideCategorys(cid);
+            });
+            //鼠标离开分类条目时，实现选择器，背景变原样，字变黑，隐藏条目下商品列
+            $("div.eachCategory").mouseleave(function(){ //mouseleave：鼠标离开触发
+                var cid = $(this).attr("cid");
+                hideProductsAsideCategorys(cid);
+            });
+            //鼠标悬停在分类条目下的商品列时，左边条目列不隐藏，否则离开条目就消失，选择不到商品列
+            $("div.productsAsideCategorys").mouseenter(function(){//鼠标悬停在分类条目下的商品列时，左边条目列不隐藏，否则离开条目就消失，选择不到商品列
+                var cid = $(this).attr("cid");
+                showProductsAsideCategorys(cid);
+            });
+            $("div.productsAsideCategorys").mouseleave(function(){
+                var cid = $(this).attr("cid");
+                hideProductsAsideCategorys(cid);
+            });
+
+            //鼠标悬停横向分类条目，获取类别的位置，然后显示出选择图标
+            $("div.rightMenu span").mouseenter(function(){
+                var left = $(this).position().left;
+                var top = $(this).position().top;
+                var width = $(this).css("width");
+                var destLeft = parseInt(left) + parseInt(width)/2;
+                $("img#catear").css("left",destLeft);
+                $("img#catear").css("top",top-20);
+                $("img#catear").fadeIn(500); //渐显出
+            });
+            $("div.rightMenu span").mouseleave(function(){
+                $("img#catear").hide();
+            });
+
+            //以下是对分类条目、分类和轮播等等页面元素的布局调位
+            var left = $("div#carousel-of-product").offset().left;
+            $("div.categoryMenu").css("left",left-20);
+            $("div.categoryWithCarousel div.head").css("margin-left",left);
+            $("div.productsAsideCategorys").css("left",left-20);
+
+            $("div.productsAsideCategorys div.row a").each(function(){
+                var v = Math.round(Math.random() *6);
+                if(v == 1)
+                    $(this).css("color","#87CEFA");
+            });
+        }
+
+        $(function(){
+
+            var data4Vue = {
+                uri:'foreHome',
+                categories: []
+            };
+            //ViewModel
+            var vue = new Vue({
+                el: '#workingArea',
+                data: data4Vue,
+                mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                    linkDefaultActions();//给超链接加上默认的监听 例如click等等
+                    this.load();//获取数据
+                },
+                methods: {
+                    load:function(){
+                        var url =  this.uri;
+                        axios.get(url).then(function(response) {
+                            vue.categories = response.data;
+                            vue.$nextTick(function(){
+                                //要等渲染结束之后，才来进行监听，否则他们都没有被创建出来，监听也没有意义
+                                homePageRegisterListeners();
+                            })
+                        });
+                    }
+                },
+                filters:{
+                    subTitleFilter:function(value) {
+                        if (!value) return ''; //如果为空，则返回空字符串
+                        return value.split(" ")[0]; //根据空格拆分，并且只获取数组第一个值
+                    }
+                }
+            });
+
+
+        });
+
+    </script>
+
+
+    <title>天下第一商城</title>
+    <div class="homepageDiv">
+        <div th:replace="include/homePage/home/categoryAndcarousel::html" ></div><!--分类和轮播-->
+        <div th:replace="include/homePage/home/homepageCategoryProducts::html" ></div><!--页面下面的产品项-->
+    </div>
+</div>
+
+
+
+
