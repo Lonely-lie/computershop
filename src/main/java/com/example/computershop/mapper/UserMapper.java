@@ -1,5 +1,6 @@
 package com.example.computershop.mapper;
 
+import com.example.computershop.domain.entity.Product;
 import com.example.computershop.domain.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,4 +12,11 @@ public interface UserMapper {
     int listCount();
 
     User finByOne(int user_id);
+
+    User findByName(String name);//查询是否用户名存在
+
+    int add(User user);//注册用户
+
+    User getByNameAndPassword(String name, String password);
+
 }

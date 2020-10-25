@@ -1,7 +1,7 @@
 <div th:fragment="html">
-	<div  :cid="c.id" class="productsAsideCategorys" v-for="c in categories">
-		<div class="row show1" v-for="ps in c.productsByRow">
-			<a :href="'product?pid='+p.id" v-for="p in ps" v-if="p.pro_desc.length!=0">
+	<div  :cid="c.id" class="productsAsideCategorys" v-for="c in categories"><!--商品类别循环-->
+		<div class="row show1" v-for="ps in c.productsByRow"><!--商品类别里面的商品ROw循环-->
+			<a :href="'product?pid='+p.id" v-for="p in ps" v-if="p.pro_desc.length!=0"><!--Row集合里面循环，显示每一行-->
 				{{p.pro_desc | subTitleFilter}}     <!--分类下的各个商品推荐-->
 			</a>
 			<div class="seperator"></div>

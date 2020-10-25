@@ -26,5 +26,16 @@
     SELECT * FROM user_info   where id=#{user_id}
   </select>
 
+    <select id="findByName" parameterType="string" resultMap="UserResult">
+    SELECT * FROM user_info   where name=#{name}
+  </select>
+
+    <insert id="add" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_info(name,password,img_url,sex,salt,create_time,update_time,is_delete)
+        VALUES(#{name},#{password},#{img_url},#{sex},#{salt},#{createTime},#{updateTime},#{isDelete})
+    </insert>
+    <select id="getByNameAndPassword" resultMap="UserResult">
+    SELECT * FROM user_info  WHERE name=#{name} and password=#{password}
+    </select>
 </mapper>
 

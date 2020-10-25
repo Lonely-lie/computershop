@@ -3,6 +3,8 @@ package com.example.computershop.pagecontroller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class HomePageController {
     @GetMapping(value="/")
@@ -12,5 +14,23 @@ public class HomePageController {
     @GetMapping(value="/home")
     public String home(){
         return "homePage/homePage";
+    }
+    @GetMapping("/register")
+    public String register(){
+        return "homePage/register";
+    }
+    @GetMapping(value="/registerSuccess")
+    public String registerSuccess(){
+        return "homePage/registerSuccess";
+    }
+
+    @GetMapping(value="/login")
+    public String login(){
+        return "homePage/login";
+    }
+    @GetMapping("/foreLogout")
+    public String logout(HttpSession session) {
+        session.removeAttribute("user");
+        return "redirect:home";
     }
 }
