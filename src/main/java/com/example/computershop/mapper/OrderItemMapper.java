@@ -8,5 +8,7 @@ import java.util.List;
 public interface OrderItemMapper {
 
     List<OrderItem> findByOrderOrderByIdDesc(int order_id);
+    List<OrderItem> findByPid(int pid);
+
 
 }

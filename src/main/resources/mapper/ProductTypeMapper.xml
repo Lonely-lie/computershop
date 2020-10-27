@@ -40,6 +40,9 @@
         where id=#{id}
     </update>
 
+    <select id="findByOne"  resultMap="ProductTypeResult">
+    SELECT *   FROM pro_type_info WHERE  id=#{tid}
+  </select>
 
 </mapper>
 

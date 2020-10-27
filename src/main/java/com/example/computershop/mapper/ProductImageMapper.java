@@ -14,6 +14,7 @@ public interface ProductImageMapper {
     public List<ProductImage> finDetailByPid(int pid,String type_detail);
 
 
+
     int add(ProductImage productImage);
 
     ProductImage findOne(int id);

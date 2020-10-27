@@ -6,9 +6,11 @@ import java.util.List;
 
 public class Product {
 
-    private ProductImage firstProductImage;
-
-
+    private ProductImage firstProductImage;//产品缩略图
+    private List<ProductImage> productSingleImages;//单个产品图片集合
+    private List<ProductImage> productDetailImages;//详情产品图片集合
+    private int saleCount;//销量
+    private int reviewCount;//累计评价
 
 
 
@@ -25,10 +27,40 @@ public class Product {
     private LocalDateTime createTime =LocalDateTime.now();
     private boolean isDelete;
 
-    public Product() {
+    public List<ProductImage> getProductSingleImages() {
+        return productSingleImages;
     }
 
+    public void setProductSingleImages(List<ProductImage> productSingleImages) {
+        this.productSingleImages = productSingleImages;
+    }
 
+    public List<ProductImage> getProductDetailImages() {
+        return productDetailImages;
+    }
+
+    public void setProductDetailImages(List<ProductImage> productDetailImages) {
+        this.productDetailImages = productDetailImages;
+    }
+
+    public int getSaleCount() {
+        return saleCount;
+    }
+
+    public void setSaleCount(int saleCount) {
+        this.saleCount = saleCount;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public Product() {
+    }
 
     public Integer getId() {
         return id;

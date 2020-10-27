@@ -1,22 +1,22 @@
 package com.example.computershop.datacontroller;
 
-import com.example.computershop.domain.entity.ProductType;
-import com.example.computershop.domain.entity.User;
+import com.example.computershop.comparator.*;
+import com.example.computershop.domain.entity.*;
 import com.example.computershop.mapper.ProductTypeMapper;
-import com.example.computershop.service.ProductService;
-import com.example.computershop.service.UserService;
+import com.example.computershop.mapper.PropertyValueMapper;
+import com.example.computershop.service.*;
 import com.example.computershop.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ForeRESTController {
@@ -27,6 +27,14 @@ public class ForeRESTController {
     ProductService productService;
     @Autowired
     UserService userService;
+    @Autowired
+    ProductImageService productImageService;
+    @Autowired
+    PropertyValueService propertyValueService;
+    @Autowired
+    ReviewService reviewService;
+    @Autowired
+    ProductTypeService productTypeService;
     @GetMapping("/foreHome")
     public Object home() {
         List<ProductType> productTypes= productTypeMapper.listAll(); //获取所有商品类型集合
@@ -73,5 +81,72 @@ public class ForeRESTController {
         }
     }
 
+    @GetMapping("/foreProduct/{pid}")
+    public Object product(@PathVariable("pid") int pid) {
+        Product product = productService.get(pid);//获取pid获取商品对象
+        List<ProductImage> productSingleImages = productImageService.listSingleProductImages(pid);//根据商品获取商品单个图片
+        List<ProductImage> productDetailImages = productImageService.listDetailProductImages(pid);//根据商品获取商品详情图片
+        product.setProductSingleImages(productSingleImages);//给商品设置单个图片
+        product.setProductDetailImages(productDetailImages);//给商品设置详情图片
 
+        List<PropertyValue> pvs = propertyValueService.list(pid);//根据商品ID获取商品属性值
+
+        List<Review> reviews = reviewService.list(pid);//根据商品ID获取商品评价集合
+
+        productService.setSaleAndReviewNumber(product);
+
+        productImageService.setFirstProductImage(product);
+
+
+
+        Map<String,Object> map= new HashMap<>();
+        map.put("product", product);
+        map.put("pvs", pvs);
+        map.put("reviews", reviews);
+
+        return Result.success(map);
+    }
+
+    @GetMapping("foreCheckLogin")//验证是否登录
+    public Object checkLogin( HttpSession session) {
+        User user =(User)  session.getAttribute("user");
+        if(user!=null)
+            return Result.success();
+        return Result.fail("未登录");
+    }
+
+
+    @GetMapping("foreCategory/{cid}")
+    public Object category(@PathVariable int cid,@RequestParam(required = false,defaultValue = "") String sort) {
+        ProductType productType = productTypeService.get(cid);
+        System.out.println(productType);
+        productService.fill(productType);
+        productService.setSaleAndReviewNumber(productType.getProducts());
+//        productTypeService.removeCategoryFromProduct(c);
+
+        if(null!=sort){
+            switch(sort){
+                case "all"://综合 商品评价数量*商品销售数量
+                    Collections.sort(productType.getProducts(),new ProductAllComparator());
+                    break;
+                case "review"://人气  根据商品评价数量
+                    Collections.sort(productType.getProducts(),new ProductReviewComparator());
+                    break;
+                case "date" ://创建时间  新品
+                    Collections.sort(productType.getProducts(),new ProductDateComparator());
+                    break;
+
+                case "saleCount" ://销售数量
+                    Collections.sort(productType.getProducts(),new ProductSaleCountComparator());
+                    break;
+                case "price"://价格
+                    Collections.sort(productType.getProducts(),new ProductPriceComparator());
+                    break;
+                case "declinePrice"://价格
+                    Collections.sort(productType.getProducts(),new ProductDeclinePriceComparator());
+                    break;
+            }
+        }
+        return productType;
+    }
 }

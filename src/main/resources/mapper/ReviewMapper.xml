@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.computershop.mapper.ReviewMapper">
+
+    <resultMap type="review" id="ReviewResult">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="pro_img" column="pro_img"/>
+        <result property="pro_desc" column="pro_desc"/>
+        <result property="pro_price" column="pro_price"/>
+        <result property="rest_stock" column="rest_stock"/>
+        <result property="shop_id" column="shop_id"/>
+        <result property="pro_type_id" column="pro_type_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+
+    <select id="findReviewListByPid" resultMap="ReviewResult">
+    SELECT * FROM review  WHERE product_id=#{pid} and is_delete=0
+  </select>
+    <insert id="add" parameterType="review" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO review(content,user_id,product_id,create_time,is_delete)
+        VALUES(#{content},#{user_id},#{product_id},#{createTime},#{isDelete})
+    </insert>
+
+
+    <select id="findCountByPid" resultType="int">
+    SELECT COUNT(*)   FROM review WHERE is_delete=0 and product_id=#{pid}
+  </select>
+
+
+
+
+</mapper>
+

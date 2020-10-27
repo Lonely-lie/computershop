@@ -15,6 +15,15 @@ public class ProductService {
     ProductImageService productImageService;
     @Autowired
     ProductMapper productMapper;
+    @Autowired
+    OrderItemService orderItemService;
+    @Autowired
+    ReviewService reviewService;
+
+
+    public Product get(int pid) {
+        return productMapper.findByOne(pid);
+    }
 
     public void fill(List<ProductType> productTypes) {
         for (ProductType productType : productTypes) {
@@ -40,6 +49,22 @@ public class ProductService {
             }
             productType.setProductsByRow(productsByRow);
         }
+    }
+
+
+    public void setSaleAndReviewNumber(Product product) {
+        int saleCount = orderItemService.getSaleCount(product.getId());//根据商品ID获取商品订单并且计算销售数量
+        product.setSaleCount(saleCount);//设置销售数量
+
+        int reviewCount = reviewService.getCount(product);//把对象传入 获取评价数量
+        product.setReviewCount(reviewCount);//设置评价数量
+
+    }
+
+
+    public void setSaleAndReviewNumber(List<Product> products) {
+        for (Product product : products)
+            setSaleAndReviewNumber(product);
     }
 
 

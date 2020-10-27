@@ -18,6 +18,9 @@ public class UserService {
     public User getByName(String name) {
         return userMapper.findByName(name);
     }
+    public User getByUserId(int user_id){
+        return userMapper.finByOne(user_id);
+    }
 
     public void add(User user) {
         userMapper.add(user);

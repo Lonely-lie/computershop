@@ -6,6 +6,7 @@ import com.example.computershop.domain.entity.PropertyValue;
 import com.example.computershop.mapper.ProductMapper;
 import com.example.computershop.mapper.PropertyMapper;
 import com.example.computershop.mapper.PropertyValueMapper;
+import com.example.computershop.service.PropertyValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +23,14 @@ public class PropertyValueController {
     private PropertyMapper propertyMapper;
     @Autowired
     private ProductMapper productMapper;
-
+    @Autowired
+    private PropertyValueService propertyValueService;
     @GetMapping
     public List<PropertyValue> list(@PathVariable("pid") int pid) {
         Product product = productMapper.findByOne(pid);//
         this.init(product);//对产品进行初始化，设置属性值
         List<PropertyValue> propertyValues = propertyValueMapper.findProductVaLueListByPid(pid);
-        getPropertyValue(propertyValues,pid);
+        propertyValueService.getPropertyValue(propertyValues,pid);
         return propertyValues;
     }
     @PutMapping("/update")
@@ -55,12 +57,6 @@ public class PropertyValueController {
         }
     }
 
-    public List<PropertyValue> getPropertyValue(List<PropertyValue> list,int pid){
-        for (PropertyValue propertyValue:list){
-            propertyValue.setProperty(propertyMapper.findByPropertyId(propertyValue.getProperty_id()));
-        }
-        return list;
-    }
 
 
 

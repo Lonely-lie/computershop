@@ -33,4 +33,13 @@ public class HomePageController {
         session.removeAttribute("user");
         return "redirect:home";
     }
+    @GetMapping(value="/product")
+    public String product(){
+        return "homePage/product";
+    }
+    @GetMapping(value="/category")
+    public String category(){
+        return "homePage/category";
+    }
 }
+
