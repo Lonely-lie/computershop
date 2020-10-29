@@ -3,6 +3,7 @@ package com.example.computershop.mapper;
 import com.example.computershop.domain.entity.Product;
 import com.example.computershop.domain.entity.Property;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface ProductMapper {
 
 
     List<Product> findListProductByPro_type_id(int pro_type_id);
+
+    List<Product> findByNameLike(String keyword);//模糊搜索
 }

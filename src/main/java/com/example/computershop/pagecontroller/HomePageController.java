@@ -41,5 +41,9 @@ public class HomePageController {
     public String category(){
         return "homePage/category";
     }
+    @GetMapping(value="/search")//搜索页面
+    public String searchResult(){
+        return "homePage/foreSearch";
+    }
 }
 

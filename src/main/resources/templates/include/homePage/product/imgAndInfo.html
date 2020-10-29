@@ -58,9 +58,10 @@
                     }
                 });
             });
+            //立即购买
             $(".buyLink").click(function(){
                 var url = "foreCheckLogin";
-                axios.get(url).then(function(response) {
+                axios.get(url).then(function(response) {//验证是否登录
                     if(0==response.data.code){
                         var pid = vue.p.id;//获取当前商品ID
                         var num= $(".productNumberSetting").val();//获取购买商品数量num

@@ -50,6 +50,9 @@
         SELECT * FROM product_info  WHERE id=#{pid}
     </select>
 
+    <select id="findByNameLike" resultMap="ProductResult">/*模糊搜索*/
+    SELECT * FROM product_info where name like  '%${keyword}%'
+  </select>
 
 </mapper>
 

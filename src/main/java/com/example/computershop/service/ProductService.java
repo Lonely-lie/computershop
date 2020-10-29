@@ -4,6 +4,7 @@ import com.example.computershop.domain.entity.Product;
 import com.example.computershop.domain.entity.ProductType;
 import com.example.computershop.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -65,6 +66,13 @@ public class ProductService {
     public void setSaleAndReviewNumber(List<Product> products) {
         for (Product product : products)
             setSaleAndReviewNumber(product);
+    }
+
+    public List<Product> search(String keyword, int start, int size) {
+//        Sort sort = new Sort(Sort.Direction.DESC, "id");
+//        Pageable pageable = new PageRequest(start, size, sort);
+        List<Product> products =productMapper.findByNameLike(keyword);
+        return products;
     }
 
 

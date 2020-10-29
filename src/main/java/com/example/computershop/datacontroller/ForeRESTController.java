@@ -36,11 +36,13 @@ public class ForeRESTController {
     @Autowired
     ProductTypeService productTypeService;
     @GetMapping("/foreHome")
-    public Object home() {
+    public Object home() {//首页商品类型和商品
         List<ProductType> productTypes= productTypeMapper.listAll(); //获取所有商品类型集合
         productService.fill(productTypes);  //把获取的商品类型集合通过fill填充函数，对商品类型填充商品集合，商品集合里面每个商品填充first缩略图
+        //进行排序，把最新的放前面
+        for (ProductType productType:productTypes )
+            Collections.sort(productType.getProducts(),new ProductDateComparator());
         productService.fillByRow(productTypes);
-//        categoryService.removeCategoryFromProduct(productTypes);
         return productTypes;
     }
 
@@ -81,7 +83,7 @@ public class ForeRESTController {
         }
     }
 
-    @GetMapping("/foreProduct/{pid}")
+    @GetMapping("/foreProduct/{pid}")//商品页面
     public Object product(@PathVariable("pid") int pid) {
         Product product = productService.get(pid);//获取pid获取商品对象
         List<ProductImage> productSingleImages = productImageService.listSingleProductImages(pid);//根据商品获取商品单个图片
@@ -116,7 +118,7 @@ public class ForeRESTController {
     }
 
 
-    @GetMapping("foreCategory/{cid}")
+    @GetMapping("foreCategory/{cid}")//商品类型页面
     public Object category(@PathVariable int cid,@RequestParam(required = false,defaultValue = "") String sort) {
         ProductType productType = productTypeService.get(cid);
         System.out.println(productType);
@@ -148,5 +150,15 @@ public class ForeRESTController {
             }
         }
         return productType;
+    }
+
+    @PostMapping("foreSearch")//搜索
+    public Object search(String keyword){
+        if(keyword==null)
+            keyword = "";
+        List<Product> ps= productService.search(keyword,0,20);
+        productImageService.setFirstProductImages(ps);
+        productService.setSaleAndReviewNumber(ps);
+        return ps;
     }
 }
