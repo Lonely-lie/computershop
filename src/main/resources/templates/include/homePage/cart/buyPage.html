@@ -1,0 +1,197 @@
+<div th:fragment="html">
+    <script>
+        $(function(){
+
+            var pid = getUrlParms("pid");
+            var num = getUrlParms("num");
+            var data4Vue = {
+                uri:'forebuy',
+                total:0,
+                orderItems:[],
+                userAddresses:[],
+                order:{
+                    user_address_id:'',
+                    user_id:'',
+                    userMessage:'',//用户备注信息
+                    is_delete:0
+                }
+            };
+            //ViewModel
+            var vue = new Vue({
+                el: '#workingArea',
+                data: data4Vue,
+                mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                    this.load();
+                },
+                methods: {
+                    load:function(){
+                        var url =  this.uri+"/?pid="+pid+"&num="+num;
+                        axios.get(url).then(function(response) {
+                            var result = response.data;
+                            vue.total = result.data.total;
+                            vue.userAddresses = result.data.userAddresses;
+                            vue.orderItems = result.data.orderItems;
+
+                            vue.$nextTick(function(){
+                                linkDefaultActions();
+                                radioDefault();//给radio默认选择第一个
+                            })
+                        });
+                    },
+                    submitOrder:function(){//提交订单
+                        var url =  "forecreateOrder";
+                        axios.post(url,this.order).then(function(response) {
+                            var result = response.data;
+                            var oid = result.data.oid;
+                            var total = result.data.total;
+                            location.href="alipay?oid="+oid+"&total="+total;
+                        });
+                    },
+                    getRadioValue:function (){
+                        var check = $('.myRadio input:radio:checked').val();
+                        console.log(check);
+                    },
+                    //限制输入数字最大值和最小值,和显示总价格的变化
+                    numberInput:function (oi){
+                        if (oi.number>oi.product.rest_stock) {
+                            oi.number=oi.product.rest_stock;
+                        }
+                        if (oi.number<1){
+                            oi.number=1;
+                        }
+                        for (var i=0;i<vue.orderItems.length;i++){
+                            this.total=vue.orderItems[i].number*vue.orderItems[i].product.pro_price;
+                        }
+                    },
+                    keyPress:function (ob){
+                        if (!ob.value.match(/^[\+\-]?\d*?\.?\d*?$/))
+                            ob.value = ob.t_value;
+                        else ob.t_value = ob.value;
+                        if (ob.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?)?$/))
+                            ob.o_value = ob.value;
+                    }
+                }
+            });
+        })
+    </script>
+    <div class="buyPageDiv">
+        <div class="buyFlow">
+            <img class="pull-left" src="img/site/simpleLogo.png">
+            <img class="pull-right" src="img/site/buyflow.png">
+            <div style="clear:both"></div>
+        </div>
+        <div class="address">
+            <div class="addressTip">输入收货地址</div>
+            <div>
+                <form>
+                    <div v-for="ad,index in userAddresses" class="myRadio">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" :class="'myRadio'+ad.id" :id="'adRadios'+index" :value="ad.id"  >
+                                <strong>{{ad.contact_name}}</strong>
+                                <span>{{ad.cel_phone}}</span>
+                                <span>{{ad.big_address}}</span>
+                                <span>{{ad.detail_address}}</span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="productList">
+            <div class="productListTip">确认订单信息</div>
+
+            <table class="productListTable">
+                <thead>
+                <tr>
+                    <th colspan="2" class="productListTableFirstColumn">
+                        <img class="tmallbuy" src="img/site/tmallbuy.png">
+                        <a class="marketLink" href="#nowhere">店铺：天猫店铺</a>
+                        <a class="wangwanglink" href="#nowhere"> <span class="wangwangGif"></span> </a>
+                    </th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>小计</th>
+                    <th>配送方式</th>
+                </tr>
+                <tr class="rowborder">
+                    <td  colspan="2" ></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody class="productListTableTbody">
+                <tr class="orderItemTR" v-for="oi,index in orderItems" >
+                    <td class="orderItemFirstTD">
+                        <img class="orderItemImg"  :src="'img/productSingle_middle/'+oi.product.firstProductImage.id+'.jpg'">
+                    </td>
+                    <td class="orderItemProductInfo">
+                        <a  :href="'product?pid='+oi.product.id" class="orderItemProductLink">
+                            {{oi.product.name}}
+                        </a>
+                        <img src="img/site/creditcard.png" title="支持信用卡支付">
+                        <img src="img/site/7day.png" title="消费者保障服务,承诺7天退货">
+                        <img src="img/site/promise.png" title="消费者保障服务,承诺如实描述">
+                    </td>
+                    <td>
+								<span class="orderItemProductPrice">
+									{{oi.product.pro_price | formatMoneyFilter}}
+								</span>
+                    </td>
+                    <td>
+                        <span>
+                            <span class="productNumberSettingSpan">
+                                <input class="productNumberSetting" style="width: 50px" type="number" v-model.number="oi.number"  @input="numberInput(oi)"
+                                       onkeyup="if(! /^\d+$/.test(this.value)) this.value=1; " onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                            </span>
+                        件</span>
+                    </td>
+                    <td>
+								<span class="orderItemUnitSum">
+									{{oi.product.pro_price*oi.number | formatMoneyFilter}}
+								</span>
+                    </td>
+                    <td rowspan="5" class="orderItemLastTD" v-if="index==0" >
+                        <label class="orderItemDeliveryLabel">
+                            <input type="radio" value="" checked="checked">
+                            普通配送
+                        </label>
+                        <select class="orderItemDeliverySelect" >
+                            <option>快递 免邮费</option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="orderItemSumDiv">
+                <div class="pull-left">
+                    <span class="leaveMessageText">给卖家留言:</span>
+                    <span>
+						<img class="leaveMessageImg" src="img/site/leaveMessage.png">
+					</span>
+                    <span class="leaveMessageTextareaSpan">
+						<textarea name="userMessage" v-model="order.userMessage" class="leaveMessageTextarea"></textarea>
+						<div>
+							<span>还可以输入200个字符</span>
+						</div>
+					</span>
+                </div>
+                <span class="pull-right">店铺合计(含运费): ￥
+					{{total|formatMoneyFilter}}
+				</span>
+            </div>
+
+        </div>
+        <div class="orderItemTotalSumDiv">
+            <div class="pull-right">
+                <span>实付款：</span>
+                <span class="orderItemTotalSumSpan">{{total|formatMoneyFilter}}</span>
+            </div>
+        </div>
+        <div class="submitOrderDiv">
+            <button type="submit" class="submitOrderButton" @click="submitOrder">提交订单</button>
+        </div>
+    </div>
+</div>

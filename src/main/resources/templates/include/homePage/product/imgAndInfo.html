@@ -65,11 +65,8 @@
                     if(0==response.data.code){
                         var pid = vue.p.id;//获取当前商品ID
                         var num= $(".productNumberSetting").val();//获取购买商品数量num
-                        var url =  "forebuyone?pid="+pid+"&num="+num;
-                        axios.get(url).then(function(response) {
-                            var oiid = response.data;
-                            location.href="buy?oiid="+oiid;
-                        });
+                        // var url =  "forebuyone?pid="+pid+"&num="+num;
+                        location.href="buy?pid="+pid+"&num="+num;
                     }
                     else{
                         $("#loginModal").modal('show');

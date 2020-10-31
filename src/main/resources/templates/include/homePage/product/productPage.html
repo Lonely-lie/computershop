@@ -18,7 +18,7 @@
                 el: '#workingArea',
                 data: data4Vue,
                 mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
-                    linkDefaultActions();
+                    linkDefaultActions();//header里面的公共函数
                     this.load();
                 },
                 methods: {
@@ -58,8 +58,8 @@
         <img v-if="category!=null" class="categoryPictureInProductPage" :src="'img/category/'+category.id+'.jpg'"><!--无此图片，不开发产品类型图片-->
     </div>
     <div class="productPageDiv">
-        <div th:replace="include/homePage/product/imgAndInfo::html" ></div>
-        <div th:replace="include/homePage/product/productReview::html" ></div>
-        <div th:replace="include/homePage/product/productDetail::html" ></div>
+        <div th:replace="include/homePage/product/imgAndInfo::html" ></div><!--商品主体信息，包裹商品单个图片，商品价格，立即购买，加入购物车-->
+        <div th:replace="include/homePage/product/productReview::html" ></div><!--显示商品评价信息-->
+        <div th:replace="include/homePage/product/productDetail::html" ></div><!--显示商品属性和商品详情图片-->
     </div>
 </div>

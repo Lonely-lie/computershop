@@ -3,20 +3,14 @@ package com.example.computershop.datacontroller;
 import com.example.computershop.comparator.*;
 import com.example.computershop.domain.entity.*;
 import com.example.computershop.mapper.ProductTypeMapper;
-import com.example.computershop.mapper.PropertyValueMapper;
 import com.example.computershop.service.*;
 import com.example.computershop.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class ForeRESTController {
@@ -35,6 +29,10 @@ public class ForeRESTController {
     ReviewService reviewService;
     @Autowired
     ProductTypeService productTypeService;
+    @Autowired
+    OrderItemService orderItemService;
+    @Autowired
+    UserAddressService userAddressService;
     @GetMapping("/foreHome")
     public Object home() {//首页商品类型和商品
         List<ProductType> productTypes= productTypeMapper.listAll(); //获取所有商品类型集合
@@ -161,4 +159,37 @@ public class ForeRESTController {
         productService.setSaleAndReviewNumber(ps);
         return ps;
     }
+
+
+    @GetMapping("forebuy")
+    public Object buyNow(int pid, int num, HttpSession session) {
+
+        Product product = productService.get(pid);
+        User user =(User)  session.getAttribute("user");
+        OrderItem orderItem = new OrderItem();
+        orderItem.setProduct(product);
+        productImageService.setFirstProductImage(product);
+        orderItem.setUser_id(user.getId());
+        orderItem.setNumber(num);
+        double total = 0;
+
+        List<UserAddress> userAddresses = new ArrayList<>();
+        userAddresses=userAddressService.findByUserID(user.getId());
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        orderItems.add(orderItem);
+
+        for (OrderItem oi:orderItems)
+            total+=oi.getProduct().getPro_price()*oi.getNumber();
+        Map<String,Object> map = new HashMap<>();
+
+
+        map.put("orderItems", orderItems);
+        map.put("total", total);
+        map.put("userAddresses", userAddresses);
+        return Result.success(map);
+    }
+
+
+
 }

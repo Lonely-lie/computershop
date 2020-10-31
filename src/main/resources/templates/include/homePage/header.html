@@ -81,6 +81,27 @@
                 alert("这个功能没做，蛤蛤~");
             });
         }
+        //给地址默认选择第一个
+        function radioDefault(){
+            $('input:radio:first').attr('checked', 'checked');
+
+        }
+        function numDefault(){
+            $(".productNumberSetting").keyup(function(){
+                var num= $(".productNumberSetting").val();
+                num = parseInt(num);
+                if(isNaN(num))//检测是否是非数字
+                    num= 1;
+                if(num<=0)
+                    num = 1;
+                if(num>stock)
+                    num = stock;
+                $(".productNumberSetting").val(num);
+            });
+
+
+        }
+
 
         //创建 Vue 实例之前全局定义过滤器 一共三个
         Vue.filter("subStringFilter", function(value, start, end){

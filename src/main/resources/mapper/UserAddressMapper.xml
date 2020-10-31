@@ -21,7 +21,9 @@
     SELECT * FROM user_address_info  WHERE id=#{user_address_id}
     </select>
 
-
+    <select id="findAllByUid" resultMap="UserAddressResult">
+    SELECT * FROM user_address_info  WHERE user_id=#{uid} ORDER BY FIELD(is_default,'true','false')
+    </select>
 
 
 

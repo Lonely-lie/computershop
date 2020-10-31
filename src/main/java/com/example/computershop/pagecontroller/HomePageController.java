@@ -45,5 +45,9 @@ public class HomePageController {
     public String searchResult(){
         return "homePage/foreSearch";
     }
+    @GetMapping(value="/buy")//立即购买页面
+    public String buy(){
+        return "homePage/buy";
+    }
 }
 

@@ -796,7 +796,7 @@ div.infoInimgAndInfo div.promotionDiv {
 }
 
 div.infoInimgAndInfo div.productPriceDiv {
-	background-image: url(../../img/site/priceBackground.png);
+	background-image: url(../../../img/site/priceBackground.png);
 	height: 102px;
 	padding: 10px;
 	color: #666666;
@@ -1193,7 +1193,7 @@ span.wangwangGif {
 	display: inline-block;
 	width: 25px;
 	height: 25px;
-	background-image: url(../../img/site/wangwang.gif);
+	background-image: url(../../../img/site/wangwang.gif);
 	background-repeat: no-repeat;
 	background-color: transparent;
 	background-attachment: scroll;
