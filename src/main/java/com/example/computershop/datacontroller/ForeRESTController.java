@@ -189,7 +189,38 @@ public class ForeRESTController {
         map.put("userAddresses", userAddresses);
         return Result.success(map);
     }
+    @GetMapping("foreAddCar")//加入购物车
+    public Object foreAddCar(int pid, int num, HttpSession session) {
+        int  orderItem_Id = addCar(pid,num,session);
+        return Result.success(orderItem_Id);
+    }
+    private int addCar(int pid, int num, HttpSession session) {
+        Product product = productService.get(pid);
+        int orderItem_Id = 0;
 
+        User user =(User)  session.getAttribute("user");
+        boolean found = false;
+        List<OrderItem> ois = orderItemService.listByUser(user.getId());
+        for (OrderItem oi : ois) {
+            if(oi.getPro_id()==product.getId()){
+                oi.setNumber(oi.getNumber()+num);
+                orderItemService.update(oi);
+                found = true;
+                orderItem_Id = oi.getId();
+                break;
+            }
+        }
+
+        if(!found){
+            OrderItem oi = new OrderItem();
+            oi.setUser_id(user.getId());
+            oi.setPro_id(product.getId());
+            oi.setNumber(num);
+            orderItemService.add(oi);
+            orderItem_Id = oi.getId();
+        }
+        return orderItem_Id;
+    }
 
 
 }

@@ -19,9 +19,19 @@
     SELECT * FROM order_item  WHERE pro_id=#{pid}
     </select>
 
+    <select id="findByUid" resultMap="OrderItemResult">
+    SELECT * FROM order_item  WHERE user_id=#{uid}
+    </select>
 
-
-
-
+    <update id="update" parameterType="orderItem">
+        update order_item
+        set
+        pro_id=#{pro_id},user_id=#{user_id},number=#{number}
+        where id=#{id}
+    </update>
+    <insert id="add" parameterType="orderItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_item(pro_id,user_id,number)
+        VALUES(#{pro_id},#{user_id},#{number})
+    </insert>
 </mapper>
 

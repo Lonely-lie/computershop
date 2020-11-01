@@ -81,7 +81,7 @@
                 <form>
                     <div v-for="ad,index in userAddresses" class="myRadio" >
                         <div class="radio" style="padding: 5px" >
-                            <label class="myLabel" onmouseenter="this.className='hover'" onmouseleave="this.className='hoverOut'" style="padding: 0px;">
+                            <label class="myLabel" onmouseenter="this.className='hover'" onmouseleave="this.className='hoverOut'" style="padding: 0px;font-size: x-large">
                                 <input type="radio" name="optionsRadios" :class="'myRadio'+ad.id" :id="'adRadios'+index" :value="ad.id"  >&nbsp&nbsp
                                 <strong>{{ad.contact_name}}</strong>
                                 <span>{{ad.cel_phone}}</span>

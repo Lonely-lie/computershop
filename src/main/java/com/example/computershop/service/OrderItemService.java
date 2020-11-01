@@ -34,4 +34,16 @@ public class OrderItemService {
         return orderItemMapper.findByPid(pid);
     }
 
+    public List<OrderItem> listByUser(int uid){
+        return orderItemMapper.findByUid(uid);
+    }
+
+
+    public void update(OrderItem orderItem) {
+        orderItemMapper.update(orderItem);
+    }
+
+    public void add(OrderItem orderItem) {
+        orderItemMapper.add(orderItem);
+    }
 }

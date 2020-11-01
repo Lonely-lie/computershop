@@ -41,7 +41,7 @@
                     if(0==response.data.code){
                         var pid = vue.p.id;//获取当前商品ID
                         var num= $(".productNumberSetting").val();//获取购买商品数量num
-                        var url =  "foreaddCart?pid="+pid+"&num="+num;
+                        var url =  "foreAddCar?pid="+pid+"&num="+num;
                         axios.get(url).then(function(response) {
                             var result = response.data;
                             if(0==result.code){
