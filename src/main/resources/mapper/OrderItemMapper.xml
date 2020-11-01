@@ -19,8 +19,8 @@
     SELECT * FROM order_item  WHERE pro_id=#{pid}
     </select>
 
-    <select id="findByUid" resultMap="OrderItemResult">
-    SELECT * FROM order_item  WHERE user_id=#{uid}
+    <select id="findCartByUid" resultMap="OrderItemResult">
+    SELECT * FROM order_item  WHERE user_id=#{uid} and order_id is null
     </select>
 
     <update id="update" parameterType="orderItem">
@@ -29,9 +29,20 @@
         pro_id=#{pro_id},user_id=#{user_id},number=#{number}
         where id=#{id}
     </update>
+
+    <update id="foreChangeCartNumber" parameterType="int">
+        update order_item
+        set
+        number=#{number}
+        where user_id=#{user_id} and pro_id=#{pro_id} and order_id is null
+    </update>
+
     <insert id="add" parameterType="orderItem" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO order_item(pro_id,user_id,number)
         VALUES(#{pro_id},#{user_id},#{number})
     </insert>
+    <delete id="deleteOrderItem" parameterType="int">
+        delete from order_item where id=#{oiid}
+    </delete>
 </mapper>
 

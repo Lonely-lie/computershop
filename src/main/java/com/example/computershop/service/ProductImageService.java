@@ -1,5 +1,6 @@
 package com.example.computershop.service;
 
+import com.example.computershop.domain.entity.OrderItem;
 import com.example.computershop.domain.entity.Product;
 import com.example.computershop.domain.entity.ProductImage;
 import com.example.computershop.mapper.ProductImageMapper;
@@ -11,7 +12,8 @@ import java.util.List;
 public class ProductImageService {
     @Autowired
     private ProductImageMapper productImageMapper;
-
+    @Autowired
+    private ProductService productService;
 
     public static final String type_single = "single";
     public static final String type_detail = "detail";
@@ -36,5 +38,12 @@ public class ProductImageService {
     public void setFirstProductImages(List<Product> products) {
         for (Product product : products)
             setFirstProductImage(product);
+    }
+    //根据订单项(购物车)添加缩略图
+    public void setFirstProductImagesOnOrderItems(List<OrderItem> ois) {
+        for (OrderItem orderItem : ois) {
+            orderItem.setProduct(productService.get(orderItem.getPro_id()));
+            setFirstProductImage(orderItem.getProduct());
+        }
     }
 }

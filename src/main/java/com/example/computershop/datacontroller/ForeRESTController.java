@@ -5,6 +5,7 @@ import com.example.computershop.domain.entity.*;
 import com.example.computershop.mapper.ProductTypeMapper;
 import com.example.computershop.service.*;
 import com.example.computershop.util.Result;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -190,28 +191,33 @@ public class ForeRESTController {
         return Result.success(map);
     }
     @GetMapping("foreAddCar")//加入购物车
-    public Object foreAddCar(int pid, int num, HttpSession session) {
-        int  orderItem_Id = addCar(pid,num,session);
+    public Object foreAddCart(int pid, int num, HttpSession session) {
+        int  orderItem_Id = addCart(pid,num,session);
         return Result.success(orderItem_Id);
     }
-    private int addCar(int pid, int num, HttpSession session) {
+    private int addCart(int pid, int num, HttpSession session) {
+        //1、获取商品对象
         Product product = productService.get(pid);
-        int orderItem_Id = 0;
-
+        //2、获取用户对象
         User user =(User)  session.getAttribute("user");
+        //3、初始化订单项ID
+        int orderItem_Id = 0;
+        //4、设置是否找到
         boolean found = false;
-        List<OrderItem> ois = orderItemService.listByUser(user.getId());
+        //5、获取用户订单项（没有订单的订单项，即购物车）
+        List<OrderItem> ois = orderItemService.listByUser(user.getId());//获取没有订单的订单项，即购物车
         for (OrderItem oi : ois) {
-            if(oi.getPro_id()==product.getId()){
-                oi.setNumber(oi.getNumber()+num);
-                orderItemService.update(oi);
+            //判断商品是否已经在购物车
+            if(oi.getPro_id()==product.getId()){//存在进入
+                oi.setNumber(oi.getNumber()+num);//叠加购物数量
+                orderItemService.update(oi);//数据库更新数据，number
                 found = true;
                 orderItem_Id = oi.getId();
                 break;
             }
         }
 
-        if(!found){
+        if(!found){//数据库不存在，创建新的订单项
             OrderItem oi = new OrderItem();
             oi.setUser_id(user.getId());
             oi.setPro_id(product.getId());
@@ -222,5 +228,33 @@ public class ForeRESTController {
         return orderItem_Id;
     }
 
+    @GetMapping("foreCart")
+    public Object cart(HttpSession session) {
+        User user =(User)  session.getAttribute("user");
+        List<OrderItem> orderItems = orderItemService.listByUser(user.getId());
+        productImageService.setFirstProductImagesOnOrderItems(orderItems);
+        return orderItems;
+    }
 
+
+    @GetMapping("foreChangeCart")
+    public Object foreChangeCart(int pid, int num,HttpSession session){
+        //1、获取商品对象
+        //2、获取用户对象
+        User user =(User)  session.getAttribute("user");
+
+        orderItemService.foreChangeCart(pid,user.getId(),num);
+        return Result.success();
+
+    }
+    @DeleteMapping("foreDeleteOrderItem")
+    public Object foreDeleteOrderItem(int oiid,HttpSession session){
+        //1、获取商品对象
+        //2、获取用户对象
+        User user =(User)  session.getAttribute("user");
+
+        orderItemService.deleteOrderItem(oiid);
+        return Result.success();
+
+    }
 }

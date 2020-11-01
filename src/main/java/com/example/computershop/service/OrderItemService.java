@@ -34,13 +34,20 @@ public class OrderItemService {
         return orderItemMapper.findByPid(pid);
     }
 
+    //获取没有订单的订单项，即购物车
     public List<OrderItem> listByUser(int uid){
-        return orderItemMapper.findByUid(uid);
+        return orderItemMapper.findCartByUid(uid);
     }
 
 
     public void update(OrderItem orderItem) {
         orderItemMapper.update(orderItem);
+    }
+    public void foreChangeCart(int pro_id,int user_id,int number) {
+        orderItemMapper.foreChangeCartNumber(pro_id,user_id,number);
+    }
+    public int deleteOrderItem(int oiid) {
+        return orderItemMapper.deleteOrderItem(oiid);
     }
 
     public void add(OrderItem orderItem) {

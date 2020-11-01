@@ -49,5 +49,9 @@ public class HomePageController {
     public String buy(){
         return "homePage/buy";
     }
+    @GetMapping(value="/cart")
+    public String cart(){
+        return "homePage/cart";
+    }
 }
 
