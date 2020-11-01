@@ -53,6 +53,8 @@
                     },
                     //限制输入数字最大值和最小值,和显示总价格的变化
                     numberInput:function (oi){
+                        if (!(oi.number%1 === 0))
+                            return oi.number=1;
                         if (oi.number>oi.product.rest_stock) {
                             oi.number=oi.product.rest_stock;
                         }
@@ -62,13 +64,6 @@
                         for (var i=0;i<vue.orderItems.length;i++){
                             this.total=vue.orderItems[i].number*vue.orderItems[i].product.pro_price;
                         }
-                    },
-                    keyPress:function (ob){
-                        if (!ob.value.match(/^[\+\-]?\d*?\.?\d*?$/))
-                            ob.value = ob.t_value;
-                        else ob.t_value = ob.value;
-                        if (ob.value.match(/^(?:[\+\-]?\d+(?:\.\d+)?)?$/))
-                            ob.o_value = ob.value;
                     }
                 }
             });
@@ -84,10 +79,10 @@
             <div class="addressTip">输入收货地址</div>
             <div>
                 <form>
-                    <div v-for="ad,index in userAddresses" class="myRadio">
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="optionsRadios" :class="'myRadio'+ad.id" :id="'adRadios'+index" :value="ad.id"  >
+                    <div v-for="ad,index in userAddresses" class="myRadio" >
+                        <div class="radio" style="padding: 5px" >
+                            <label class="myLabel" onmouseenter="this.className='hover'" onmouseleave="this.className='hoverOut'" style="padding: 0px;">
+                                <input type="radio" name="optionsRadios" :class="'myRadio'+ad.id" :id="'adRadios'+index" :value="ad.id"  >&nbsp&nbsp
                                 <strong>{{ad.contact_name}}</strong>
                                 <span>{{ad.cel_phone}}</span>
                                 <span>{{ad.big_address}}</span>
@@ -143,8 +138,7 @@
                     <td>
                         <span>
                             <span class="productNumberSettingSpan">
-                                <input class="productNumberSetting" style="width: 50px" type="number" v-model.number="oi.number"  @input="numberInput(oi)"
-                                       onkeyup="if(! /^\d+$/.test(this.value)) this.value=1; " onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                <input class="productNumberSetting" style="width: 50px" type="number" v-model.number="oi.number"  @input="numberInput(oi)">
                             </span>
                         件</span>
                     </td>

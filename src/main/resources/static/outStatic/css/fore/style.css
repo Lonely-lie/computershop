@@ -2294,4 +2294,7 @@ table td{
 input{
 	outline: none;
 }
-
+.hover{
+	border:1px solid green;
+}
+.hoverOut{border:0px solid #ddd}
