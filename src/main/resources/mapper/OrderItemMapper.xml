@@ -44,5 +44,10 @@
     <delete id="deleteOrderItem" parameterType="int">
         delete from order_item where id=#{oiid}
     </delete>
+
+
+    <select id="findByOrderItemId" parameterType="int" resultMap="OrderItemResult">
+        SELECT * from  order_item where id=#{oiid}
+    </select>
 </mapper>
 

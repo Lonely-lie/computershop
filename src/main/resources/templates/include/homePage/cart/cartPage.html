@@ -29,27 +29,31 @@
         })
 
 
-        var deleteOrderItem = false;
-        var deleteOrderItemid = 0;
+        var deleteOrderItem = false;//是否删除
+        var deleteOrderItemid = 0;//获取要删除的订单项ID
+        //购物车监听函数
         function cartPageRegisterListeners(){
+            //购物车点击删除商品
             $("a.deleteOrderItem").click(function(){
                 deleteOrderItem = false;
                 var oiid = $(this).attr("oiid")
                 deleteOrderItemid = oiid;
-                $("#deleteConfirmModal").modal('show');
+                $("#deleteConfirmModal").modal('show');//显示删除模态框
             });
+            //点击确认删除后，执行下列函数
             $("button.deleteConfirmButton").click(function(){
-                deleteOrderItem = true;
-                $("#deleteConfirmModal").modal('hide');
+                deleteOrderItem = true;//更改，确认删除
+                $("#deleteConfirmModal").modal('hide');//隐藏删除模态框
             });
-
+            //点击确认删除后，执行axios.delete函数
             $('#deleteConfirmModal').on('hidden.bs.modal', function (e) {
                 if(deleteOrderItem){
 
                     var url = "foreDeleteOrderItem?oiid="+deleteOrderItemid;
                     axios.delete(url).then(function(response){
                         if(0==response.data.code){
-                            $("tr.cartProductItemTR[oiid="+deleteOrderItemid+"]").hide();
+                            $("tr.cartProductItemTR[oiid="+deleteOrderItemid+"]").remove();//移除被删除的行
+                            selectitAllFalse();//重置选择状态
                         }
                         else{
                             location.href="login";
@@ -57,23 +61,24 @@
                     });
                 }
             })
-
+            //选择单个商品，执行
             $("img.cartProductItemIfSelected").click(function(){
                 var selectit = $(this).attr("selectit")
-                if("selectit"==selectit){
+                if("selectit"==selectit){//设置不选择
                     $(this).attr("src","img/site/cartNotSelected.png");
                     $(this).attr("selectit","false")
                     $(this).parents("tr.cartProductItemTR").css("background-color","#fff");
                 }
-                else{
+                else{//设置选择
                     $(this).attr("src","img/site/cartSelected.png");
                     $(this).attr("selectit","selectit")
                     $(this).parents("tr.cartProductItemTR").css("background-color","#FFF8E1");
                 }
-                syncSelect();
-                syncCreateOrderButton();
-                calcCartSumPriceAndNumber();
+                syncSelect();//同步选择
+                syncCreateOrderButton();//同步提交订单
+                calcCartSumPriceAndNumber();//同步计算购物车商品数量和金额
             });
+            //点击全选按钮，进行全选和反选
             $("img.selectAllItem").click(function(){
                 var selectit = $(this).attr("selectit")
                 if("selectit"==selectit){
@@ -99,7 +104,7 @@
 
 
             });
-
+            //输入商品数量，执行下列，获取数值，对数值进行过滤，
             $(".orderItemNumberSetting").keyup(function(){
                 var pid=$(this).attr("pid");
                 var stock= $("span.orderItemStock[pid="+pid+"]").text();
@@ -116,7 +121,7 @@
 
                 syncPrice(pid,num,price);
             });
-
+            //增加商品数量
             $(".numberPlus").click(function(){
 
                 var pid=$(this).attr("pid");
@@ -129,6 +134,7 @@
                     num = stock;
                 syncPrice(pid,num,price);
             });
+            //减少商品数量
             $(".numberMinus").click(function(){
                 var pid=$(this).attr("pid");
                 var stock= $("span.orderItemStock[pid="+pid+"]").text();
@@ -140,7 +146,7 @@
                     num=1;
                 syncPrice(pid,num,price);
             });
-
+            //点击结算按钮，遍历所有商品行，获取被选择的商品oiid，然后进行访问传递 buy?+params("oiid="+oiid)
             $("button.createOrderButton").click(function(){
                 var params = "";
                 $(".cartProductItemIfSelected").each(function(){
@@ -153,7 +159,7 @@
                 location.href="buy?"+params;
             });
         }
-
+        //对选择商品时，进行同步提交订单按钮，无选择，提交按钮灰色不可选择，反之，可以点击
         function syncCreateOrderButton(){
             var selectAny = false;
             $(".cartProductItemIfSelected").each(function(){
@@ -172,15 +178,16 @@
             }
 
         }
+        //同步全选按钮显示，只选择其中一个，则不显示全选，若全部选择，则显示全选
         function syncSelect(){
             var selectAll = true;
             $(".cartProductItemIfSelected").each(function(){
-                if("false"==$(this).attr("selectit")){
+                if("false"==$(this).attr("selectit")){//有一个为false不选择，则不是全选
                     selectAll = false;
                 }
             });
 
-            if(selectAll)
+            if(selectAll)//全选
                 $("img.selectAllItem").attr("src","img/site/cartSelected.png");
             else
                 $("img.selectAllItem").attr("src","img/site/cartNotSelected.png");
@@ -188,6 +195,7 @@
 
 
         }
+        //计算购物车商品数量和金额
         function calcCartSumPriceAndNumber(){
             var sum = 0;
             var totalNumber = 0;
@@ -207,6 +215,7 @@
             $("span.cartTitlePrice").html("￥"+formatMoney(sum));
             $("span.cartSumNumber").html(totalNumber);
         }
+        //减少增加商品数量，进行同步价格
         function syncPrice(pid,num,price){
             $(".orderItemNumberSetting[pid="+pid+"]").val(num);
             var cartProductItemSmallSumPrice = formatMoney(num*price);
@@ -219,6 +228,18 @@
                     location.href="login";
                 }
             });
+        }
+        //全选状态下，删除某商品时，重置选择
+        function selectitAllFalse(){
+            $("img.selectAllItem").attr("src","img/site/cartNotSelected.png");
+            $("img.selectAllItem").attr("selectit","false")
+            $(".cartProductItemIfSelected").each(function(){
+                $(this).attr("src","img/site/cartNotSelected.png");
+                $(this).attr("selectit","false");
+                $(this).parents("tr.cartProductItemTR").css("background-color","#fff");
+            });
+            syncCreateOrderButton();
+            calcCartSumPriceAndNumber();
         }
     </script>
 

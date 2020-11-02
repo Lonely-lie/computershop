@@ -190,6 +190,35 @@ public class ForeRESTController {
         map.put("userAddresses", userAddresses);
         return Result.success(map);
     }
+    @GetMapping("forebuy2")
+    public Object buyNow(String[] oiid,HttpSession session){
+        User user =(User)  session.getAttribute("user");
+        List<OrderItem> orderItems = new ArrayList<>();
+        float total = 0;
+        List<UserAddress> userAddresses = new ArrayList<>();
+        userAddresses=userAddressService.findByUserID(user.getId());
+        for (String strid : oiid) {
+            int id = Integer.parseInt(strid);
+            OrderItem orderItem= orderItemService.get(id);
+            orderItem.setProduct(productService.get(orderItem.getPro_id()));
+            total +=orderItem.getProduct().getPro_price()*orderItem.getNumber();
+            orderItems.add(orderItem);
+        }
+
+
+        productImageService.setFirstProductImagesOnOrderItems(orderItems);
+
+        session.setAttribute("ois", orderItems);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("orderItems", orderItems);
+        map.put("total", total);
+        map.put("userAddresses", userAddresses);
+
+        return Result.success(map);
+    }
+
+
     @GetMapping("foreAddCar")//加入购物车
     public Object foreAddCart(int pid, int num, HttpSession session) {
         int  orderItem_Id = addCart(pid,num,session);
@@ -205,7 +234,7 @@ public class ForeRESTController {
         //4、设置是否找到
         boolean found = false;
         //5、获取用户订单项（没有订单的订单项，即购物车）
-        List<OrderItem> ois = orderItemService.listByUser(user.getId());//获取没有订单的订单项，即购物车
+        List<OrderItem> ois = orderItemService.listCartByUser(user.getId());//获取没有订单的订单项，即购物车
         for (OrderItem oi : ois) {
             //判断商品是否已经在购物车
             if(oi.getPro_id()==product.getId()){//存在进入
@@ -228,16 +257,16 @@ public class ForeRESTController {
         return orderItem_Id;
     }
 
-    @GetMapping("foreCart")
+    @GetMapping("foreCart")//获取购物车
     public Object cart(HttpSession session) {
         User user =(User)  session.getAttribute("user");
-        List<OrderItem> orderItems = orderItemService.listByUser(user.getId());
+        List<OrderItem> orderItems = orderItemService.listCartByUser(user.getId());
         productImageService.setFirstProductImagesOnOrderItems(orderItems);
         return orderItems;
     }
 
 
-    @GetMapping("foreChangeCart")
+    @GetMapping("foreChangeCart")//改变购物车
     public Object foreChangeCart(int pid, int num,HttpSession session){
         //1、获取商品对象
         //2、获取用户对象

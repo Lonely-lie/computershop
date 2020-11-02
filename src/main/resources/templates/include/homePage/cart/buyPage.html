@@ -1,7 +1,7 @@
 <div th:fragment="html">
     <script>
         $(function(){
-
+            var oiid = getUrlParms("oiid");
             var pid = getUrlParms("pid");
             var num = getUrlParms("num");
             var data4Vue = {
@@ -25,6 +25,21 @@
                 },
                 methods: {
                     load:function(){
+                        if (oiid!==null){//从购物车结算
+                            var url =  this.uri+"2/?oiid="+oiid;
+                            axios.get(url).then(function(response) {
+                                var result = response.data;
+                                vue.total = result.data.total;
+                                vue.orderItems = result.data.orderItems;
+                                vue.userAddresses = result.data.userAddresses;
+
+                                vue.$nextTick(function(){
+                                    linkDefaultActions();
+                                    radioDefault();//给radio默认选择第一个
+                                })
+                            });
+                            return ;
+                        }
                         var url =  this.uri+"/?pid="+pid+"&num="+num;
                         axios.get(url).then(function(response) {
                             var result = response.data;
@@ -61,9 +76,12 @@
                         if (oi.number<1){
                             oi.number=1;
                         }
+                        var all =0;
                         for (var i=0;i<vue.orderItems.length;i++){
-                            this.total=vue.orderItems[i].number*vue.orderItems[i].product.pro_price;
+                            var one =vue.orderItems[i].number*vue.orderItems[i].product.pro_price;
+                            all += one;
                         }
+                        this.total = all;
                     }
                 }
             });

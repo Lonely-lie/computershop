@@ -35,7 +35,7 @@ public class OrderItemService {
     }
 
     //获取没有订单的订单项，即购物车
-    public List<OrderItem> listByUser(int uid){
+    public List<OrderItem> listCartByUser(int uid){
         return orderItemMapper.findCartByUid(uid);
     }
 
@@ -52,5 +52,9 @@ public class OrderItemService {
 
     public void add(OrderItem orderItem) {
         orderItemMapper.add(orderItem);
+    }
+
+    public OrderItem get(int id) {
+        return orderItemMapper.findByOrderItemId(id);
     }
 }

@@ -18,4 +18,5 @@ public interface OrderItemMapper {
 
     int deleteOrderItem(int oiid);
 
+    OrderItem findByOrderItemId(int id);
 }
