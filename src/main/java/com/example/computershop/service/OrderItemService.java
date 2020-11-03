@@ -43,9 +43,12 @@ public class OrderItemService {
     public void update(OrderItem orderItem) {
         orderItemMapper.update(orderItem);
     }
+
+    //购物车改变商品数量
     public void foreChangeCart(int pro_id,int user_id,int number) {
         orderItemMapper.foreChangeCartNumber(pro_id,user_id,number);
     }
+
     public int deleteOrderItem(int oiid) {
         return orderItemMapper.deleteOrderItem(oiid);
     }

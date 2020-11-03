@@ -268,20 +268,22 @@ public class ForeRESTController {
 
     @GetMapping("foreChangeCart")//改变购物车
     public Object foreChangeCart(int pid, int num,HttpSession session){
-        //1、获取商品对象
-        //2、获取用户对象
+        //1、获取用户对象
         User user =(User)  session.getAttribute("user");
-
+        //2、判断登录状态
+        if (user==null)
+            return Result.fail("未登录");
         orderItemService.foreChangeCart(pid,user.getId(),num);
         return Result.success();
 
     }
     @DeleteMapping("foreDeleteOrderItem")
     public Object foreDeleteOrderItem(int oiid,HttpSession session){
-        //1、获取商品对象
-        //2、获取用户对象
+        //1、获取用户对象
         User user =(User)  session.getAttribute("user");
-
+        //2、判断登录状态
+        if (user==null)
+            return Result.fail("未登录");
         orderItemService.deleteOrderItem(oiid);
         return Result.success();
 
