@@ -7,7 +7,7 @@
             <input name="keyword" type="text" placeholder="时尚男鞋  太阳镜 ">
             <button  type="submit" class="searchButton">搜索</button>
             <div class="searchBelow">
-				<span th:each="c,status: ${application.categories_below_search}" th:if="${status.index>=5 && status.index<=8}">
+				<span th:each="c,status: ${application.categories_below_search}" th:if="${status.index>=2 && status.index<=4}">
 					<a th:href="@{'category?cid='+${c.id}}" th:text="${c.name}" ></a>
 					<span th:if="${status.index!=8}">|</span>
 	            </span>
