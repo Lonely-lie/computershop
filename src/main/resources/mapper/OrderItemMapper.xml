@@ -26,7 +26,7 @@
     <update id="update" parameterType="orderItem">
         update order_item
         set
-        pro_id=#{pro_id},user_id=#{user_id},number=#{number}
+        pro_id=#{pro_id},user_id=#{user_id},number=#{number},order_id=#{order_id}
         where id=#{id}
     </update>
 

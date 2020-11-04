@@ -38,5 +38,10 @@
         SELECT * FROM order_info  WHERE id=#{oid}
     </select>
 
+    <insert id="add" parameterType="order" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO order_info(orderCode,userMessage,user_address_id,user_id,payDate,deliveryDate,confirmDate,status,create_time,is_delete,update_time)
+        VALUES(#{orderCode},#{userMessage},#{user_address_id},#{user_id},#{payDate},#{deliveryDate},#{confirmDate},#{status},#{createTime},#{isDelete},#{updateTime})
+    </insert>
+
 </mapper>
 

@@ -20,5 +20,6 @@ public interface OrderMapper {
     int update(Order order);
 
 
+    int add(Order order);
 
 }

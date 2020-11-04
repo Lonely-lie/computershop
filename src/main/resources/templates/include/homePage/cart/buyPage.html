@@ -10,8 +10,8 @@
                 orderItems:[],
                 userAddresses:[],
                 order:{
-                    user_address_id:'',
-                    user_id:'',
+                    user_address_id:null,
+                    user_id:null,
                     userMessage:'',//用户备注信息
                     is_delete:0
                 }
@@ -25,7 +25,7 @@
                 },
                 methods: {
                     load:function(){
-                        if (oiid!==null){//从购物车结算
+                        if (oiid!==null){//从购物车中结算，进入提交订单页面结算
                             var url =  this.uri+"2/?oiid="+oiid;
                             axios.get(url).then(function(response) {
                                 var result = response.data;
@@ -54,17 +54,22 @@
                         });
                     },
                     submitOrder:function(){//提交订单
-                        var url =  "forecreateOrder";
-                        axios.post(url,this.order).then(function(response) {
+                        var url =  "foreCreateOrder";
+                        var mapData = {
+                            "order":this.order,
+                            "orderItems":this.orderItems
+                        }
+                        this.order.user_address_id= parseInt($('.myRadio input:radio:checked').val());
+                        axios.post(url,mapData).then(function(response) {
                             var result = response.data;
                             var oid = result.data.oid;
                             var total = result.data.total;
                             location.href="alipay?oid="+oid+"&total="+total;
                         });
                     },
-                    getRadioValue:function (){
+                    getRadioValue:function (){//测试
                         var check = $('.myRadio input:radio:checked').val();
-                        console.log(check);
+                        return parseInt(check);
                     },
                     //限制输入数字最大值和最小值,和显示总价格的变化
                     numberInput:function (oi){

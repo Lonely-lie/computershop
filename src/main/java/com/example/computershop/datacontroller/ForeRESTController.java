@@ -1,16 +1,19 @@
 package com.example.computershop.datacontroller;
 
+import com.alibaba.fastjson.JSON;
 import com.example.computershop.comparator.*;
 import com.example.computershop.domain.entity.*;
 import com.example.computershop.mapper.ProductTypeMapper;
 import com.example.computershop.service.*;
 import com.example.computershop.util.Result;
-import org.apache.ibatis.annotations.Delete;
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -34,6 +37,8 @@ public class ForeRESTController {
     OrderItemService orderItemService;
     @Autowired
     UserAddressService userAddressService;
+    @Autowired
+    OrderService orderService;
     @GetMapping("/foreHome")
     public Object home() {//首页商品类型和商品
         List<ProductType> productTypes= productTypeMapper.listAll(); //获取所有商品类型集合
@@ -233,7 +238,7 @@ public class ForeRESTController {
         int orderItem_Id = 0;
         //4、设置是否找到
         boolean found = false;
-        //5、获取用户订单项（没有订单的订单项，即购物车）
+        //5、获取用户订单项（没有订单的订单项，即购物车
         List<OrderItem> ois = orderItemService.listCartByUser(user.getId());//获取没有订单的订单项，即购物车
         for (OrderItem oi : ois) {
             //判断商品是否已经在购物车
@@ -277,6 +282,7 @@ public class ForeRESTController {
         return Result.success();
 
     }
+
     @DeleteMapping("foreDeleteOrderItem")
     public Object foreDeleteOrderItem(int oiid,HttpSession session){
         //1、获取用户对象
@@ -287,5 +293,44 @@ public class ForeRESTController {
         orderItemService.deleteOrderItem(oiid);
         return Result.success();
 
+    }
+
+    @PostMapping("foreCreateOrder")
+    public Object createOrder(@RequestBody Map<String,Object> param,HttpSession session) throws Exception {
+        Order order = JSON.parseObject(JSON.toJSONString(param.get("order")),Order.class);
+        List<OrderItem> ois = JSON.parseArray(JSON.toJSONString(param.get("orderItems")),OrderItem.class);
+        //1、获取用户对象
+        User user =(User)  session.getAttribute("user");
+        //2、判断是否登录
+        if(user==null)
+            return Result.fail("未登录");
+        //3、设置订单编号：时间+四个随机数字
+        String orderCode = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + RandomUtils.nextInt(10000);
+        //4、给order对象设置，订单编号
+        order.setOrderCode(orderCode);
+        //4、给order对象设置，创建时间
+        order.setCreateTime(LocalDateTime.now());
+        //4、给order对象设置，用户id
+        order.setUser_id(user.getId());
+        //4、给order对象设置，订单状态
+        order.setStatus(OrderService.waitPay);
+        //5、获取用户中的orderItems，是购物车选择可能多个的结算商品，是一个集合
+//        List<OrderItem> ois= (List<OrderItem>)  session.getAttribute("ois");
+
+        float total =orderService.add(order,ois);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("oid", order.getId());
+        map.put("total", total);
+
+        return Result.success(map);
+    }
+    @GetMapping("forepayed")
+    public Object payed(int oid) {
+        Order order = orderService.getByOid(oid);
+        order.setStatus(OrderService.waitDelivery);
+        order.setPayDate(LocalDateTime.now());
+        orderService.update(order);
+        return order;
     }
 }

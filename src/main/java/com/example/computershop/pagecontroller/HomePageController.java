@@ -53,5 +53,9 @@ public class HomePageController {
     public String cart(){
         return "homePage/cart";
     }
+    @GetMapping(value="/alipay")
+    public String alipay(){
+        return "homePage/alipay";
+    }
 }
 
