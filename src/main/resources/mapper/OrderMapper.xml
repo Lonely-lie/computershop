@@ -22,6 +22,10 @@
     SELECT * FROM order_info  WHERE is_delete=0 LIMIT #{offset},#{size}
     </select>
 
+    <select id="findByUserAndStatusNotOrderByIdDesc" resultMap="OrderResult">
+    SELECT * FROM order_info  WHERE is_delete=0 and user_id =#{uid} and status!=#{status}
+    </select>
+
     <select id="listCount" resultType="int">
     SELECT COUNT(*)   FROM order_info WHERE is_delete=0
     </select>
@@ -30,7 +34,7 @@
     <update id="update" parameterType="order">
         update order_info
         set
-        status=#{status},deliveryDate=#{deliveryDate},update_time=#{updateTime}
+        status=#{status},deliveryDate=#{deliveryDate},update_time=#{updateTime},payDate=#{payDate}
         where id=#{id}
     </update>
 

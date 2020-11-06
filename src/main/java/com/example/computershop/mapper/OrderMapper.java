@@ -22,4 +22,7 @@ public interface OrderMapper {
 
     int add(Order order);
 
+    List<Order> findByUserAndStatusNotOrderByIdDesc(int uid, String status);
+
+
 }

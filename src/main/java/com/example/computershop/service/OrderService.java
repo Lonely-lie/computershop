@@ -2,6 +2,7 @@ package com.example.computershop.service;
 
 import com.example.computershop.domain.entity.Order;
 import com.example.computershop.domain.entity.OrderItem;
+import com.example.computershop.domain.entity.User;
 import com.example.computershop.mapper.OrderItemMapper;
 import com.example.computershop.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +56,14 @@ public class OrderService {
         return total;
     }
 
+    public List<Order> listByUserWithoutDelete(User user) {
+        //获取用户所有未删除的订单
+        List<Order> orders = listByUserAndNotDeleted(user.getId());
+        orderItemService.fill(orders);
+        return orders;
+    }
+    public List<Order> listByUserAndNotDeleted(int uid) {
+        return orderMapper.findByUserAndStatusNotOrderByIdDesc(uid, OrderService.delete);
+    }
 
 }

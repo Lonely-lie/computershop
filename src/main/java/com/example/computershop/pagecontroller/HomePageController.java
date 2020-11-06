@@ -62,5 +62,10 @@ public class HomePageController {
     public String payed(){
         return "homePage/payed";
     }
+
+    @GetMapping(value="/bought")
+    public String bought(){
+        return "homePage/bought";
+    }
 }
 

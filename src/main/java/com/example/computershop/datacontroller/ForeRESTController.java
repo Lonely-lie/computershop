@@ -347,4 +347,15 @@ public class ForeRESTController {
 
     }
 
+    //查看我的订单
+    @GetMapping("foreBought")
+    public Object bought(HttpSession session) {
+        User user =(User)  session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录");
+        //获取用户没有删除的订单
+        List<Order> os= orderService.listByUserWithoutDelete(user);
+        return os;
+    }
+
 }
