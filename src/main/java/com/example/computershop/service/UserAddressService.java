@@ -14,4 +14,10 @@ public class UserAddressService {
     public List<UserAddress> findByUserID(int uid){//立即购买
         return userAddressMapper.findAllByUid(uid);
     }
+
+
+    //通过地址ID查找地址对象
+    public UserAddress findByUserAddressId(int adId){
+        return userAddressMapper.findOneByID(adId);
+    }
 }

@@ -10,4 +10,6 @@ public interface UserAddressMapper {
 
 
     List<UserAddress> findAllByUid(int uid);//立即购买
+
+
 }

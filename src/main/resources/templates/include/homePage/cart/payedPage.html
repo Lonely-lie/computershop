@@ -3,10 +3,15 @@
         $(function(){
             var oid = getUrlParms("oid");
             var total = getUrlParms("total");
+            var time = moment().add(7, 'days').format("YYYY-MM-DD");
             var data4Vue = {
-                uri:'forepayed',
+                uri:'forePayed',
                 order:[],
-                total:0
+                userAddress:{
+                    'contact_name':null,
+                },
+                time:time,
+                total:0,
             };
             //ViewModel
             var vue = new Vue({
@@ -20,7 +25,9 @@
                     load:function(){
                         var url =  this.uri+"?oid="+oid;
                         axios.get(url).then(function(response) {
-                            vue.order = response.data;
+                            var result = response.data;
+                            vue.order = result.data.order;
+                            vue.userAddress = result.data.userAddress;
                         });
                     }
                 }
@@ -37,12 +44,12 @@
 
         </div>
         <div class="payedAddressInfo">
-            <ul>
-                <li>收货地址：{{order.address}} {{order.receiver}} {{order.mobile }}</li>
-                <li>实付款：<span class="payedInfoPrice">
-					{{total|formatMoney}}
+            <ul style="font-size: x-large">
+                <li>收货地址：<strong>{{userAddress.contact_name}}</strong> {{userAddress.cel_phone}} {{userAddress.big_address }}{{userAddress.detail_address }} </li>
+                <li>实付款：<span class="payedInfoPrice" style="font-size: x-large">
+					{{total|formatMoney}}</span>
                 </li>
-                <li>预计08月08日送达	</li>
+                <li>预计{{time}}送达	</li>
             </ul>
 
             <div class="paedCheckLinkDiv">
@@ -58,7 +65,7 @@
 
         <div class="warningDiv">
             <img src="img/site/warning.png">
-            <b>安全提醒：</b>下单后，<span class="redColor boldWord">用QQ给您发送链接办理退款的都是骗子！</span>天猫不存在系统升级，订单异常等问题，谨防假冒客服电话诈骗！
+            <b>安全提醒：</b>下单后，<span class="redColor boldWord">用QQ给您发送链接办理退款的都是骗子！</span>不存在系统升级，订单异常等问题，谨防假冒客服电话诈骗！
         </div>
     </div>
 </div>

@@ -40,7 +40,7 @@ public class OrderService {
         float total = 0;
         //订单中添加一条数据
         add(order);
-        System.out.println("我的oid是——————"+order.getId());
+//        System.out.println("我的oid是——————"+order.getId());
         if(false)
             throw new RuntimeException("eee");
 

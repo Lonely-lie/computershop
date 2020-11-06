@@ -57,5 +57,10 @@ public class HomePageController {
     public String alipay(){
         return "homePage/alipay";
     }
+
+    @GetMapping(value="/payed")//确认支付页面跳转
+    public String payed(){
+        return "homePage/payed";
+    }
 }
 

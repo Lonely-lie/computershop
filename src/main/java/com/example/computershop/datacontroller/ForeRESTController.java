@@ -325,12 +325,26 @@ public class ForeRESTController {
 
         return Result.success(map);
     }
-    @GetMapping("forepayed")
+
+    @GetMapping("forePayed")//确认支付后，进入成功付款页面
     public Object payed(int oid) {
+        //获取订单对象
         Order order = orderService.getByOid(oid);
+        //更改订单状态为等待发货
         order.setStatus(OrderService.waitDelivery);
+        //设置支付时间
         order.setPayDate(LocalDateTime.now());
+        //更新到数据库
         orderService.update(order);
-        return order;
+
+        //设置订单地址
+        UserAddress userAddress = userAddressService.findByUserAddressId(order.getUser_address_id());
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("order", order);
+        map.put("userAddress", userAddress);
+        return Result.success(map);
+
     }
+
 }
