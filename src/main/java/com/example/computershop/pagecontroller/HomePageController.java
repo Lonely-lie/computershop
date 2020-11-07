@@ -77,5 +77,10 @@ public class HomePageController {
     public String orderConfirmed(){
         return "homePage/orderConfirmed";
     }
+    @GetMapping(value="/review")
+    public String review(){
+        return "homePage/review";
+    }
+
 }
 

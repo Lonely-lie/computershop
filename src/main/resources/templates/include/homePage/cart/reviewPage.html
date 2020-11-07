@@ -1,0 +1,105 @@
+<div th:fragment="html">
+    <script>
+        $(function(){
+            var oid = getUrlParms("oid");
+            var data4Vue = {
+                uri:'foreReview',
+                orders:[],
+                p:'',
+                o:null,
+                reviews:[],
+                showReview:true,
+                orderItems:[],
+                review:{
+                    content:''
+                }
+            };
+            //ViewModel
+            var vue = new Vue({
+                el: '#workingArea',
+                data: data4Vue,
+                mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                    this.load();
+                },
+                methods: {
+                    load:function(){
+                        var url =  this.uri+"?oid="+oid;
+                        axios.get(url).then(function(response) {
+                            var result = response.data;
+                            vue.o = result.data.o;
+                            vue.orderItems = result.data.orderItems;
+                            vue.$nextTick(function(){
+                                linkDefaultActions();
+                            })
+                        });
+                    },
+                    addReview:function(oi){
+                        var oiId = oi.id;
+                        this.review.content = $("textarea[id="+oiId+"]").val();
+                        var url =  "foreAddReview?oiId="+oiId;
+
+                        axios.post(url,this.review).then(function(response) {
+                            var result = response.data;
+                            if (result.code===0){
+                                // vue.showReview = false;
+                                $(".myReview[id="+oi.product.id+"]").hide();
+                                $(".reviewSuccess[id="+oi.product.id+"]").show();
+                                vue.load();
+                            }else {
+                                alert("错误，请重新登录！")
+                                location.href="login";
+                            }
+                        });
+                    },
+                    updateStatus:function (){
+                        var url =  "addReviewUpdateStatus"+"?oid="+oid;
+
+                    }
+                }
+            });
+        })
+    </script>
+    <div class="reviewDiv" v-for="oi in orderItems">
+        <div class="reviewProductInfoDiv">
+            <div class="reviewProductInfoImg"><img v-if="null!=oi.product.firstProductImage" width="400px" height="400px" :src="'img/productSingle/'+oi.product.firstProductImage.id+'.jpg'"></div>
+            <div class="reviewProductInfoRightDiv">
+                <div class="reviewProductInfoRightText">
+                    {{oi.product.name}}
+                </div>
+                <table class="reviewProductInfoTable">
+                    <tr>
+                        <td width="75px">价格:</td>
+                        <td><span class="reviewProductInfoTablePrice">￥{{oi.product.pro_price|formatMoneyFilter}}</span> 元 </td>
+                    </tr>
+                    <tr>
+                        <td>配送</td>
+                        <td>快递:  0.00</td>
+                    </tr>
+                    <tr>
+                        <td>月销量:</td>
+                        <td><span class="reviewProductInfoTableSellNumber">{{oi.product.saleCount}}</span> 件</td>
+                    </tr>
+                    <div class="reviewStasticsLeftContent">累计评价 <span class="reviewStasticsNumber"> {{oi.product.reviewCount}}</span></div>
+                </table>
+
+                <div v-show="showReview" class="makeReviewDiv myReview" :id="oi.product.id">
+                    <div class="makeReviewText">其他买家，需要你的建议哦！</div>
+                    <textarea value="" :id="oi.id" class="form-control" style="min-width:100%;min-height: 105px"></textarea></td>
+                    <div class="makeReviewButtonDiv">
+                        <button @click="addReview(oi)" type="submit">提交评价</button>
+                    </div>
+                </div>
+                <div v-show="!showReview" class="reviewSuccess" :id="oi.product.id">
+                    <div class="list-group-item-success" align="center" style="font-size: xx-large">评价成功！</div>
+                    <div align="center"><a :href="'product?pid='+oi.product.id"  style="font-size: x-large">查看商品</a></div>
+                    <div align="center"><a :href="'bought'"  style="font-size: x-large">查看我的订单</a></div>
+                    <div align="center"><a :href="'cart'"  style="font-size: x-large">查看购物车</a></div>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+
+
+    </div>
+</div>

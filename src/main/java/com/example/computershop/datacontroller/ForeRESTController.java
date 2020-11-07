@@ -398,4 +398,48 @@ public class ForeRESTController {
         orderService.update(o);
         return Result.success();
     }
+
+    //我的订单评价商品
+    @GetMapping("foreReview")
+    public Object review(int oid,HttpSession session) {
+        User user =(User)  session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录");
+        Order order = orderService.getByOid(oid);
+        orderItemService.fill(order);
+        List<OrderItem> orderItems = order.getOrderItems();
+        Map<String,Object> map = new HashMap<>();
+        for (OrderItem orderItem : orderItems)
+            productService.setSaleAndReviewNumber(orderItem.getProduct());
+        map.put("o", order);
+        map.put("orderItems", orderItems);
+
+        return Result.success(map);
+    }
+    //添加评价
+    @PostMapping("foreAddReview")
+    public Object addReview(HttpSession session,int oiId,@RequestBody Review review) {
+        User user =(User)  session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录");
+
+        //获取订单项对象
+        OrderItem orderItem = orderItemService.get(oiId);
+        //获取对象的信息
+        int pro_id = orderItem.getPro_id();
+        int user_id = orderItem.getUser_id();
+        int order_id = orderItem.getOrder_id();
+
+        review.setProduct_id(pro_id);
+        review.setUser_id(user_id);
+        review.setCreateTime(LocalDateTime.now());
+
+        reviewService.add(review);
+
+        Order order =  orderService.getByOid(orderItem.getOrder_id());
+        order.setStatus(OrderService.finish);
+        orderService.update(order);
+        return Result.success();
+    }
+
 }

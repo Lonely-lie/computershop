@@ -20,8 +20,8 @@
     SELECT * FROM review  WHERE product_id=#{pid} and is_delete=0
   </select>
     <insert id="add" parameterType="review" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO review(content,user_id,product_id,create_time,is_delete)
-        VALUES(#{content},#{user_id},#{product_id},#{createTime},#{isDelete})
+        INSERT INTO review(content,user_id,product_id,create_time)
+        VALUES(#{content},#{user_id},#{product_id},#{createTime})
     </insert>
 
 
