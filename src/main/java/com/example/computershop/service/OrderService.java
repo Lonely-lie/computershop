@@ -66,4 +66,13 @@ public class OrderService {
         return orderMapper.findByUserAndStatusNotOrderByIdDesc(uid, OrderService.delete);
     }
 
+    public void cacl(Order o) {
+        List<OrderItem> orderItems = o.getOrderItems();
+        float total = 0;
+        for (OrderItem orderItem : orderItems) {
+            total+=orderItem.getProduct().getPro_price()*orderItem.getNumber();
+        }
+        o.setTotal(total);
+    }
+
 }

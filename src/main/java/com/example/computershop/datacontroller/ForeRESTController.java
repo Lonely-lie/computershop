@@ -357,5 +357,45 @@ public class ForeRESTController {
         List<Order> os= orderService.listByUserWithoutDelete(user);
         return os;
     }
+    //确认收货页面
+    @GetMapping("foreConfirmPay")
+    public Object confirmPay(int oid) {
+        //获取order对象
+        Order order = orderService.getByOid(oid);
+        //给order填充orderItems
+        orderItemService.fill(order);
+        //计算order的总total，与fill中的不同
+        orderService.cacl(order);
 
+        //设置订单地址
+        UserAddress userAddress = userAddressService.findByUserAddressId(order.getUser_address_id());
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("order", order);
+        map.put("userAddress", userAddress);
+        return Result.success(map);
+    }
+
+    //orderConfirmedPage.html页面的请求，
+    @GetMapping("foreOrderConfirmed")
+    public Object orderConfirmed( int oid) {
+        //获取订单对象
+        Order o = orderService.getByOid(oid);
+        //修改状态为等待评价
+        o.setStatus(OrderService.waitReview);
+        //设置收货时间
+        o.setConfirmDate(LocalDateTime.now());
+        //修改到数据库
+        orderService.update(o);
+
+        return Result.success();
+    }
+    //删除订单
+    @PutMapping("foreDeleteOrder")
+    public Object deleteOrder(int oid){
+        Order o = orderService.getByOid(oid);
+        o.setStatus(OrderService.delete);
+        orderService.update(o);
+        return Result.success();
+    }
 }

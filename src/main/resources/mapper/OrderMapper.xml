@@ -34,7 +34,7 @@
     <update id="update" parameterType="order">
         update order_info
         set
-        status=#{status},deliveryDate=#{deliveryDate},update_time=#{updateTime},payDate=#{payDate}
+        status=#{status},deliveryDate=#{deliveryDate},update_time=#{updateTime},payDate=#{payDate},confirmDate=#{confirmDate}
         where id=#{id}
     </update>
 

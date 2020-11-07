@@ -67,5 +67,15 @@ public class HomePageController {
     public String bought(){
         return "homePage/bought";
     }
+
+    @GetMapping(value="/confirmPay")
+    public String confirmPay(){
+        return "homePage/confirmPay";
+    }
+
+    @GetMapping(value="/orderConfirmed")
+    public String orderConfirmed(){
+        return "homePage/orderConfirmed";
+    }
 }
 
