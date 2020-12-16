@@ -32,9 +32,13 @@
         })
     </script>
 
-    <title>模仿天猫官网-{{c.name}}</title>
+    <title>天下第一：{{c.name}}</title>
     <div id="category">
         <div class="categoryPageDiv">
+            <ul class="breadcrumb" style="background-color: #fff;font-size: x-large" >
+                <li class="breadcrumb-item"><a href="home"  >主页</a></li>
+                <li class="breadcrumb-item">{{c.name}}</li>
+            </ul>
 <!--            <img v-if="c.id!=null" :src="'img/category/'+c.id+'.jpg'">-->
             <div th:replace="include/homePage/ProductType/sortBar::html" ></div>
             <div th:replace="include/homePage/ProductType/productsByCategory::html" ></div>

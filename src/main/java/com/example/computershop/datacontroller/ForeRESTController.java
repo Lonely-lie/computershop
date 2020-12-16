@@ -3,18 +3,30 @@ package com.example.computershop.datacontroller;
 import com.alibaba.fastjson.JSON;
 import com.example.computershop.comparator.*;
 import com.example.computershop.domain.entity.*;
+import com.example.computershop.mapper.ProductImageMapper;
 import com.example.computershop.mapper.ProductTypeMapper;
 import com.example.computershop.service.*;
+import com.example.computershop.util.ImageUtil;
 import com.example.computershop.util.Result;
+import javafx.scene.image.Image;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.List;
 
 @RestController
 public class ForeRESTController {
@@ -39,6 +51,8 @@ public class ForeRESTController {
     UserAddressService userAddressService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    private ProductImageMapper productImageMapper;
     @GetMapping("/foreHome")
     public Object home() {//首页商品类型和商品
         List<ProductType> productTypes= productTypeMapper.listAll(); //获取所有商品类型集合
@@ -439,6 +453,69 @@ public class ForeRESTController {
         Order order =  orderService.getByOid(orderItem.getOrder_id());
         order.setStatus(OrderService.finish);
         orderService.update(order);
+        return Result.success();
+    }
+
+    //个人中心
+    @GetMapping("center")
+    public Object center(HttpSession session) {
+        User user =(User)  session.getAttribute("user");
+        Map<String,Object> map = new HashMap<>();
+
+        List<UserAddress> userAddresses = new ArrayList<>();
+        userAddresses=userAddressService.findByUserID(user.getId());
+        map.put("userAddresses", userAddresses);
+        map.put("user", user);
+        return Result.success(map);
+    }
+    @PostMapping("addUserAd")
+    public Object addUserAd(HttpSession session,@RequestBody UserAddress userAddress){
+
+        User user =(User)  session.getAttribute("user");
+        if (user==null){
+            return Result.fail("未登录！");
+        }
+        userAddress.setUser_id(user.getId());
+        userAddressService.insert(userAddress);
+        return Result.success();
+    }
+    @DeleteMapping("addUserAd/{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public Object delete(@PathVariable("id") int id) {
+        userAddressService.delete(id);
+        return Result.success();
+    }
+
+    @PostMapping("/addUserIcon")
+    public Object add(MultipartFile image, HttpServletRequest request,HttpSession session) throws Exception {
+        int maxIconSize = 61440;
+        User user =(User)  session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录");
+        if (image.getSize()>maxIconSize)
+            return Result.fail("图片太大！");
+
+        userService.updateIcon(user.getId());
+
+        String folder = "img/Icon";
+
+
+        //获取图片存储地址
+        File imageFolder = new File(request.getServletContext().getRealPath(folder));
+        //file 父元素+文件名字
+        File file = new File(imageFolder, user.getId() + ".jpg");
+
+        String fileName = file.getName(); //37.jpg
+
+        //创建文件夹
+        if (!file.getParentFile().exists())
+            file.getParentFile().mkdirs();
+        try {
+            image.transferTo(file);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return Result.success();
     }
 

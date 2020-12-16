@@ -29,4 +29,7 @@ public class UserService {
         return userMapper.getByNameAndPassword(name,password);
     }
 
+    public void updateIcon(int IconId){
+        userMapper.updateIcon(IconId);
+    }
 }

@@ -37,5 +37,12 @@
     <select id="getByNameAndPassword" resultMap="UserResult">
     SELECT * FROM user_info  WHERE name=#{name} and password=#{password}
     </select>
+
+    <update id="updateIcon" parameterType="int">
+        update user_info
+        set
+        img_url=#{IconImg}
+        where id=#{IconImg}
+    </update>
 </mapper>
 

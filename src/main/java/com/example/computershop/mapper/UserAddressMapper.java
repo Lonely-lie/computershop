@@ -11,5 +11,8 @@ public interface UserAddressMapper {
 
     List<UserAddress> findAllByUid(int uid);//立即购买
 
+    int insert(UserAddress userAddress);
+
+    int delete(int id);
 
 }

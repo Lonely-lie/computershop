@@ -20,4 +20,16 @@ public class UserAddressService {
     public UserAddress findByUserAddressId(int adId){
         return userAddressMapper.findOneByID(adId);
     }
+
+
+
+    public int insert(UserAddress userAddress){
+        return userAddressMapper.insert(userAddress);
+    }
+
+
+
+    public int delete(int id){
+        return  userAddressMapper.delete(id);
+    }
 }

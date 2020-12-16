@@ -19,6 +19,9 @@ public class ProductImageService {
     public static final String type_detail = "detail";
 
 
+
+
+
     public List<ProductImage> listSingleProductImages(int pid) {
         return productImageMapper.finSingleByPid(pid, type_single);
     }

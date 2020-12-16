@@ -22,6 +22,8 @@ public class LoginInterceptor implements HandlerInterceptor {
                 "bought",//订单页面
                 "confirmPay",
                 "orderConfirmed",
+                "accountCenter",
+
 
                 //页面功能访问
                 "forebuy",//结算页面buyPage.html的请求数据链接
@@ -30,13 +32,13 @@ public class LoginInterceptor implements HandlerInterceptor {
                 "foreCart",//cart.html/cartPage.html 请求购物车数据链接
                 "foreChangeCart",//cart.html/cartPage.html 改变购物车商品数量链接
                 "foreDeleteOrderItem",//cart.html/cartPage.html 删除购物车商品链接
-                "forecreateOrder",
-                "forepayed",
-                "forebought",
-                "foreconfirmPay",
-                "foreorderConfirmed",
-                "foredeleteOrder",
-                "forereview",
+                "foreCreateOrder",
+                "forePayed",
+                "foreBought",
+                "foreConfirmPay",
+                "foreOrderConfirmed",
+                "foreDeleteOrder",
+                "foreReview",
                 "foredoreview"
 
         };

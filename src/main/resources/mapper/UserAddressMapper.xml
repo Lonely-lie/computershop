@@ -25,8 +25,14 @@
     SELECT * FROM user_address_info  WHERE user_id=#{uid} ORDER BY FIELD(is_default,'true','false')
     </select>
 
+    <insert id="insert" parameterType="userAddress" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_address_info(contact_name,cel_phone,big_address,detail_address,create_time,update_time,user_id)
+        VALUES(#{contact_name},#{cel_phone},#{big_address},#{detail_address},#{createTime},#{updateTime},#{user_id})
+    </insert>
 
-
+    <delete id="delete" parameterType="int">
+        delete from user_address_info where id=#{id}
+    </delete>
 
 </mapper>
 

@@ -245,7 +245,7 @@ img.catear {
 
 img.logo {
 	position: absolute;
-	left: 0px;
+	left: 100px;
 	top: 30px;
 /* 	z-index:-1; */
 }

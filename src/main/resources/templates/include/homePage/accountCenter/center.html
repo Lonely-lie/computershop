@@ -1,0 +1,334 @@
+<div th:fragment="html">
+
+    <div class="container">
+
+
+
+        <div class="row" style="margin-top: 100px" >
+            <div class="col-md-2 col-xs-3">
+
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a data-toggle="tab" href="#home">首页</a></li>
+                    <li><a data-toggle="tab" href="#menu1" >账户设置</a></li>
+                    <li><a data-toggle="tab" href="#menu3">修改密码</a></li>
+                    <li><a data-toggle="tab" href="#menu4">收货地址</a></li>
+                </ul>
+
+
+            </div>
+            <div class="col-md-10 col-xs-9">
+                <div class="tab-content">
+                    <div id="home" class="tab-pane fade in active">
+                        <a data-toggle="tab" href="#menu3"></a>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">您的基础信息</h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="media-left" v-if="user!==null" >
+                                                <img :src="'img/Icon/'+user.img_url+'.jpg'" class="media-object img-rounded" style="width:60px">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="media-body">
+                                                <div >
+                                                    <div>请选择本地图片 尺寸60px 大小55kb 为佳</div>
+                                                    <input id="userImgFile" type="file" @change="getUserImgFile($event)" name="image" />
+                                                    <div>
+                                                        <button type="submit" @click="addUserImgFile" class="btn  btn-success">提 交</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>会员名</td>
+                                        <td>{{user.name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>登录邮箱</td>
+                                        <td>{{user.mail}}不设此功能</td>
+                                    </tr>
+                                    <tr>
+                                        <td>绑定手机</td>
+                                        <td>{{user.phone}}不设此功能</td>
+                                    </tr>
+                                    <tr>
+                                        <td>昵称</td>
+                                        <td>{{user.nickname}}不设此功能</td>
+                                    </tr>
+                                    <tr>
+                                        <td>性别</td>
+                                        <td>
+                                            <span v-if="user.sex" class="badge badge-danger ">男</span>
+                                            <span v-else class="badge badge-success  ">女</span></td>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div id="menu1" class="tab-pane fade">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">账户设置</h3>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <td>头像</td>
+                                        <td>
+                                            <div class="media-left">
+                                                <img :src="'img/Icon/'+user.img_url+'.jpg'" class="media-object img-rounded" style="width:60px">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>亲爱的</td>
+                                        <td>{{user.name}}，填写真实的资料，有助于好友找到你哦。</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>昵称</td>
+                                        <td>{{user.nickname}}不设此功能</td>
+                                    </tr>
+                                    <tr>
+                                        <td>性别</td>
+                                        <td>男</td>
+                                    </tr>
+                                    <tr>
+                                        <td>绑定手机</td>
+                                        <td>不设此功能</td>
+                                    </tr>
+                                    <tr>
+                                        <td>登录邮箱</td>
+                                        <td>不设此功能</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="menu3" class="tab-pane fade">
+                        <h3>修改密码</h3>
+                        <p>这是菜单 3 显示的内容。这是菜单 3 显示的内容。这是菜单 3 显示的内容。</p>
+                    </div>
+                    <div id="menu4" class="tab-pane fade">
+                        <h3>收货地址</h3>
+                        <form class="form-horizontal" role="form" id="form-menu4">
+                            <div class="form-group">
+                                <label for="big_address" class="col-sm-2 control-label">地址信息</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="big_address" placeholder="请输入地址信息" v-model="form_user_ad.big_address">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="detail_address" class="col-sm-2 control-label">详细地址</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="detail_address" placeholder="请输入详细地址" v-model="form_user_ad.detail_address">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact_name" class="col-sm-2 control-label">收货人姓名</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="contact_name" placeholder="请输入收货人姓名" v-model="form_user_ad.contact_name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="cel_phone" class="col-sm-2 control-label">收货人电话</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="cel_phone" placeholder="请输入收货人导航" v-model="form_user_ad.cel_phone">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="button" class="btn btn-default" @click="addUserAd">添加</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>省市县</th>
+                                <th>详细地址</th>
+                                <th>收货人</th>
+                                <th>收货人电话</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="ad in userAddresses">
+                                <td>{{ad.big_address}}</td>
+                                <td>{{ad.detail_address}}</td>
+                                <td>{{ad.contact_name}}</td>
+                                <td>{{ad.cel_phone}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-info btn-sm" @click="edit(ad)">
+                                        <span class="glyphicon glyphicon-asterisk"></span> 编辑
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm " @click="deleteAd(ad)">
+                                        <span class="glyphicon glyphicon-trash"></span> 删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal" id="deleteUserAddress" tabindex="-1" role="dialog" >
+            <div class="modal-dialog deleteConfirmModalDiv">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button data-dismiss="modal" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">确认删除？</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">关闭</button>
+                        <button class="btn btn-primary deleteConfirmButton" id="submit" type="button" @click="deleteAd2">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function checkEmptyImg(value,text){//判断添加图片是否有为空
+
+            if(null==value || value.length==0){
+                alert(text+ "不能为空");
+                return false;
+            }
+            return true;
+        }
+
+        var data4Vue = {
+            uri:'center',
+            userAddresses:[],
+            user:'',
+            user_ad:{
+                contact_name:'',
+                cel_phone:'',
+                big_address:'',
+                detail_address:''
+            },//空表
+            form_user_ad:{
+                contact_name:'',
+                cel_phone:'',
+                big_address:'',
+                detail_address:''
+            },//
+            deleteAddress:{},
+            userImg:''
+        };
+        //ViewModel
+        var vue = new Vue({
+            el: '#workingArea',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                this.load();
+            },
+            methods: {
+                load:function(){
+                    var url =  this.uri;
+                    axios.get(url).then(function(response) {
+                        var result = response.data;
+                        if (result.code===0){
+                            vue.userAddresses = result.data.userAddresses;
+                            vue.user = result.data.user;
+                        }else {
+                            alert("登录失效，请重新登录!");
+                            location.href="login";
+                        }
+                    });
+                },
+                addUserAd:function (){
+                    axios.post("addUserAd", this.form_user_ad)
+                        .then(function (response) {
+                            var result = response.data;
+                            if (result.code===0){
+                                vue.load();
+                                toastr.success("添加成功！");
+                                vue.form_user_ad = JSON.parse(JSON.stringify(vue.user_ad));//老师代码
+                            }else {
+                                alert("添加错误，请重新登录!");
+                                location.href="login";
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                edit:function (){
+
+                },
+                deleteAd:function (ad){
+                    vue.deleteAddress=ad;
+                    $('#deleteUserAddress').modal('show');
+                },
+                deleteAd2:function (){
+                    axios.delete("addUserAd/"+vue.deleteAddress.id)
+                        .then(function (response) {
+                            if (response.status===204){
+                                $('#deleteUserAddress').modal('hide');
+                                toastr.success("删除成功！");
+                                vue.load();
+                            }else {
+                                alert("删除出错，请重新登录!");
+                                location.href="login";
+                            }
+                        })
+                        .catch(function (error) {
+                            toastr.error(error,'错误');
+                            console.log(error);
+                        });
+                },
+                getUserImgFile:function (event){
+                    this.userImg = event.target.files[0];
+                },
+                addUserImgFile:function (){
+                    if(!checkEmptyImg(this.userImg, "详情产品图片"))
+                        return;
+
+                    var url =  "addUserIcon";
+                    var formData = new FormData();
+                    formData.append("image", this.userImg);
+
+                    axios.post(url,formData).then(function(response){
+                        var result = response.data;
+
+                        if (result.code===1){
+                            alert(result.message)
+                            $("#userImgFile").val('');
+                            vue.userImg = null;
+                        }else {
+
+                            location.reload();
+                        }
+                    });
+                },
+            }
+        })
+
+    </script>
+
+
+
+
+
+</div>

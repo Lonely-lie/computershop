@@ -82,5 +82,10 @@ public class HomePageController {
         return "homePage/review";
     }
 
+    @GetMapping(value="/accountCenter")
+    public String accountCenter(){
+        return "homePage/accountCenter";
+    }
+
 }
 

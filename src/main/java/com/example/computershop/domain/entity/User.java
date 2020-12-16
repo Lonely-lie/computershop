@@ -6,7 +6,7 @@ public class User {
     private Integer id; //用户ID
     private String name;//用户名称
     private String password;//用户密码
-    private String img_url;//用户头像地址
+    private Integer img_url;//用户头像地址
     private boolean sex;//用户性别
     private String salt;
     private LocalDateTime updateTime =LocalDateTime.now();//创建时间
@@ -40,11 +40,11 @@ public class User {
         this.password = password;
     }
 
-    public String getImg_url() {
+    public Integer getImg_url() {
         return img_url;
     }
 
-    public void setImg_url(String img_url) {
+    public void setImg_url(Integer img_url) {
         this.img_url = img_url;
     }
 
@@ -86,17 +86,5 @@ public class User {
 
     public void setDelete(boolean delete) {
         isDelete = delete;
-    }
-
-    public User(Integer id, String name, String password, String img_url, boolean sex, String salt, LocalDateTime updateTime, LocalDateTime createTime, boolean isDelete) {
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.img_url = img_url;
-        this.sex = sex;
-        this.salt = salt;
-        this.updateTime = updateTime;
-        this.createTime = createTime;
-        this.isDelete = isDelete;
     }
 }

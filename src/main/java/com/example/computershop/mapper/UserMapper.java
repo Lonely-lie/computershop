@@ -19,4 +19,7 @@ public interface UserMapper {
 
     User getByNameAndPassword(String name, String password);
 
+
+    int updateIcon(int IconImg);//注册用户
+
 }
