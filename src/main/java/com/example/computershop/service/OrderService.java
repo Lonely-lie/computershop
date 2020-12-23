@@ -37,7 +37,7 @@ public class OrderService {
         return orderMapper.add(order);
     }
     @Transactional(propagation= Propagation.REQUIRED,rollbackForClassName="Exception")
-    public float add(Order order, List<OrderItem> ois) {
+    public float add(Order order, List<OrderItem> ois,Object oiid) {
         float total = 0;
         //订单中添加一条数据
         add(order);
@@ -45,6 +45,13 @@ public class OrderService {
         if(false)
             throw new RuntimeException("eee");
 
+        //判断是否是立即购买
+        if (oiid==null)
+            for (OrderItem oi: ois) {
+                oi.setPro_id(oi.getProduct().getId());
+                //在订单项中创建立即购买的商品
+                orderItemService.add(oi);
+            }
         for (OrderItem oi: ois) {
             //给订单项设置订单ID
             oi.setOrder_id(order.getId());

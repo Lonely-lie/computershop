@@ -313,6 +313,7 @@ public class ForeRESTController {
     public Object createOrder(@RequestBody Map<String,Object> param,HttpSession session) throws Exception {
         Order order = JSON.parseObject(JSON.toJSONString(param.get("order")),Order.class);
         List<OrderItem> ois = JSON.parseArray(JSON.toJSONString(param.get("orderItems")),OrderItem.class);
+        Object oiid = param.get("oiid");
         //1、获取用户对象
         User user =(User)  session.getAttribute("user");
         //2、判断是否登录
@@ -331,7 +332,7 @@ public class ForeRESTController {
         //5、获取用户中的orderItems，是购物车选择可能多个的结算商品，是一个集合
 //        List<OrderItem> ois= (List<OrderItem>)  session.getAttribute("ois");
 
-        float total =orderService.add(order,ois);
+        float total =orderService.add(order,ois,oiid);
 
         Map<String,Object> map = new HashMap<>();
         map.put("oid", order.getId());

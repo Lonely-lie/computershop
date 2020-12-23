@@ -69,7 +69,8 @@
                         var url =  "foreCreateOrder";
                         var mapData = {
                             "order":this.order,
-                            "orderItems":this.orderItems
+                            "orderItems":this.orderItems,
+                            "oiid":oiid
                         }
                         this.order.user_address_id= parseInt($('.myRadio input:radio:checked').val());
                         axios.post(url,mapData).then(function(response) {
