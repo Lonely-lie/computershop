@@ -1,6 +1,8 @@
 package com.example.computershop.interceptor;
 
 import com.example.computershop.domain.entity.User;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.apache.commons.lang.StringUtils;
@@ -52,8 +54,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 
         if(begingWith(page, requireAuthPages)){
-            User user = (User) session.getAttribute("user");
-            if(user==null) {
+            Subject subject = SecurityUtils.getSubject();
+            if(!subject.isAuthenticated()) {
                 httpServletResponse.sendRedirect("login");
                 return false;
             }

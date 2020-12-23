@@ -204,6 +204,47 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-info modal-lg" role="document" id="item-modal"> <!--ok-->
+                <div class="modal-content">
+                    <form class="form-horizontal" role="form" id="form-menu6">
+                        <div class="form-group">
+                            <label for="big_address" class="col-sm-2 control-label">地址信息</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="big_address2" placeholder="请输入地址信息" v-model="formItem.big_address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="detail_address" class="col-sm-2 control-label">详细地址</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="detail_address2" placeholder="请输入详细地址" v-model="formItem.detail_address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_name" class="col-sm-2 control-label">收货人姓名</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="contact_name2" placeholder="请输入收货人姓名" v-model="formItem.contact_name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cel_phone" class="col-sm-2 control-label">收货人电话</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="cel_phone2" placeholder="请输入收货人导航" v-model="formItem.cel_phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" class="btn btn-default" @click="updateAd">修改</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <!-- /.modal-content-->
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -234,7 +275,9 @@
                 detail_address:''
             },//
             deleteAddress:{},
-            userImg:''
+            userImg:'',
+            formItem: {},  //编辑功能，空表单，或编辑表单
+
         };
         //ViewModel
         var vue = new Vue({
@@ -274,7 +317,27 @@
                             console.log(error);
                         });
                 },
-                edit:function (){
+                updateAd:function () {
+                    axios.put("updateUserAd", this.formItem)
+                        .then(function (response) {
+                            if (response.status === 201) {
+                                toastr.success("修改成功！");
+                                $('#editModal').modal('hide');
+                                vue.load();
+
+                                console.log(response);
+                            } else {
+                                toastr.error("修改失败！");
+                            }
+                        })
+                        .catch(function (error) {
+                            toastr.error(error, '错误');
+                            console.log(error);
+                        });
+                },
+                edit:function (item){
+                    this.formItem = JSON.parse(JSON.stringify(item));//老师代码
+                    $('#editModal').modal('show');
 
                 },
                 deleteAd:function (ad){

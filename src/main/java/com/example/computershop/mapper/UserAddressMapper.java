@@ -13,6 +13,8 @@ public interface UserAddressMapper {
 
     int insert(UserAddress userAddress);
 
+    int update(UserAddress userAddress);
+
     int delete(int id);
 
 }

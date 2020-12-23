@@ -34,5 +34,11 @@
         delete from user_address_info where id=#{id}
     </delete>
 
+    <update id="update" parameterType="userAddress">
+        update user_address_info
+        set
+        contact_name=#{contact_name},cel_phone=#{cel_phone},big_address=#{big_address},detail_address=#{detail_address},update_time=#{updateTime},user_id=#{user_id}
+        where id=#{id}
+    </update>
 </mapper>
 

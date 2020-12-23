@@ -26,6 +26,9 @@ public class UserAddressService {
     public int insert(UserAddress userAddress){
         return userAddressMapper.insert(userAddress);
     }
+    public int update(UserAddress userAddress){
+        return userAddressMapper.update(userAddress);
+    }
 
 
 

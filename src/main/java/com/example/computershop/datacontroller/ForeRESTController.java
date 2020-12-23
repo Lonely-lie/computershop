@@ -10,6 +10,12 @@ import com.example.computershop.util.ImageUtil;
 import com.example.computershop.util.Result;
 import javafx.scene.image.Image;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -76,8 +82,16 @@ public class ForeRESTController {
             String message ="用户名已经被使用,不能使用";
             return Result.fail(message);
         }
+
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        int times = 2;
+        String algorithmName = "md5";
+
+        String encodedPassword = new SimpleHash(algorithmName, password, salt, times).toString();
+
+        user.setSalt(salt);
         user.setDelete(false);
-        user.setPassword(password);
+        user.setPassword(encodedPassword);
 
         userService.add(user);//往数据库添加一条用户注册数据
 
@@ -88,17 +102,34 @@ public class ForeRESTController {
     public Object login(@RequestBody User userParam, HttpSession session) {
         String name =  userParam.getName();//获取登录用户名
         name = HtmlUtils.htmlEscape(name);//转义，防止用户乱输入
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(name, userParam.getPassword());
 
-        User user =userService.get(name,userParam.getPassword());//数据库中查询是否存在此用户，检验用户名和密码是否都正确
-        //如果搜索不到，则错误
-        if(user==null){
+//        User user =userService.get(name,userParam.getPassword());//数据库中查询是否存在此用户，检验用户名和密码是否都正确
+//        //如果搜索不到，则错误
+//        if(user==null){
+//            String message ="账号密码错误";
+//            return Result.fail(message);
+//        }
+//        else{
+//            session.setAttribute("user", user);
+//            return Result.success();
+//        }
+
+        try {
+            User user = userService.getByName(name);
+            if (user==null)
+                return Result.fail("账号密码错误");
+            subject.login(token);
+//	    	subject.getSession().setAttribute("user", user);
+            session.setAttribute("user", user);
+            return Result.success();
+        } catch (AuthenticationException e) {
             String message ="账号密码错误";
             return Result.fail(message);
         }
-        else{
-            session.setAttribute("user", user);
-            return Result.success();
-        }
+
+
     }
 
     @GetMapping("/foreProduct/{pid}")//商品页面
@@ -129,10 +160,11 @@ public class ForeRESTController {
 
     @GetMapping("foreCheckLogin")//验证是否登录
     public Object checkLogin( HttpSession session) {
-        User user =(User)  session.getAttribute("user");
-        if(user!=null)
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isAuthenticated())
             return Result.success();
-        return Result.fail("未登录");
+        else
+            return Result.fail("未登录");
     }
 
 
@@ -479,6 +511,12 @@ public class ForeRESTController {
         userAddress.setUser_id(user.getId());
         userAddressService.insert(userAddress);
         return Result.success();
+    }
+    @PutMapping("updateUserAd")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public UserAddress save(@RequestBody UserAddress userAddress) {
+        userAddressService.update(userAddress);
+        return userAddress;
     }
     @DeleteMapping("addUserAd/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
