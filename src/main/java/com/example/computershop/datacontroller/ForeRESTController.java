@@ -59,10 +59,14 @@ public class ForeRESTController {
     OrderService orderService;
     @Autowired
     private ProductImageMapper productImageMapper;
-    @GetMapping("/foreHome")
-    public Object home() {//首页商品类型和商品
+
+    @GetMapping("/foreHome")//首页商品类型和商品
+    public Object home() {
         List<ProductType> productTypes= productTypeMapper.listAll(); //获取所有商品类型集合
-        productService.fill(productTypes);  //把获取的商品类型集合通过fill填充函数，对商品类型填充商品集合，商品集合里面每个商品填充first缩略图
+
+        //把获取的商品类型集合通过fill填充函数，对商品类型填充商品集合，商品集合里面每个商品填充first缩略图
+        productService.fill(productTypes);
+
         //进行排序，把最新的放前面
         for (ProductType productType:productTypes )
             Collections.sort(productType.getProducts(),new ProductDateComparator());

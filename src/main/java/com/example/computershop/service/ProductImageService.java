@@ -31,11 +31,12 @@ public class ProductImageService {
 
 
     public void setFirstProductImage(Product product) {
+        //根据商品ID获取商品的单个图片
         List<ProductImage> singleImages = productImageMapper.finSingleByPid(product.getId(),"single");
 
-        if(!singleImages.isEmpty())
+        if(!singleImages.isEmpty())//非空
             product.setFirstProductImage(singleImages.get(0));
-        else
+        else//为空
             product.setFirstProductImage(new ProductImage()); //这样做是考虑到产品还没有来得及设置图片，但是在订单后台管理里查看订单项的对应产品图片。
     }
     public void setFirstProductImages(List<Product> products) {
