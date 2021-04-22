@@ -3,10 +3,10 @@
 #前言
 computershop 项目致力于打造一个完整的电商系统，采用现阶段流行技术实现。
 
-所设计的用户前端前台，是参考How2j的教程学习的，https://how2j.cn/k/tmall-front/tmall-front-790/790.html
-
-因为How2j前端设计有所不足，在参考了各大电商平台的设计进行了修改。
-
+商城前端设计参考了各大电商平台。
+数据库sql文件：
+链接：https://pan.baidu.com/s/1iByymD09NZ_4NZjLHkPh3A 
+提取码：lone 
 
 # 项目文档
 文档地址：https://shimo.im/docx/WuemlPerhQAcPdNO
